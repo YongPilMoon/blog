@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useLayoutEffect, useState } from "react";
 import Darkmode from "./Darkmode";
 import NoSSR from "./NoSSR";
+import Utterances from "./Utterances";
 
 const name = "MOON YONGPIL";
 export const siteTitle = "Next.js Sample Website";
@@ -67,9 +68,12 @@ export default function Layout({ children, home }) {
         </header>
         <main>{children}</main>
         {!home && (
-          <div className={styles.backToHome}>
-            <Link href="/">← Back to home</Link>
-          </div>
+          <>
+            <Utterances />
+            <div className={styles.backToHome}>
+              <Link href="/">← Back to home</Link>
+            </div>
+          </>
         )}
       </div>
     </div>
