@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://blog-lemon-seven.vercel.app
+
+# Sitemaps
+Sitemap: https://blog-lemon-seven.vercel.app/sitemap.xml
