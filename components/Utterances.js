@@ -1,4 +1,4 @@
-function Utterances(props) {
+function Utterances() {
   return (
     <section
       ref={(elem) => {
