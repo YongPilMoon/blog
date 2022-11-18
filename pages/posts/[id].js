@@ -5,6 +5,7 @@ import utilStyles from "../../styles/utils.module.css";
 import { useRouter } from "next/router";
 import { MDXRemote } from "next-mdx-remote";
 import CodeBlock from "../../components/CodeBlock";
+import Button from "../../components/Button";
 
 export async function getStaticPaths() {
   const paths = getAllPostIds();
@@ -14,7 +15,8 @@ export async function getStaticPaths() {
   };
 }
 
-export async function getStaticProps({ params }) {
+export async function getStaticProps({ params, preview }) {
+  console.log(`>>>>>>> ${preview}`);
   const postData = await getPostData(params.id);
   return {
     props: {
@@ -22,16 +24,7 @@ export async function getStaticProps({ params }) {
     },
   };
 }
-const Button = ({ children }) => {
-  return (
-    <button
-      className="bg-black dark:bg-white text-lg text-teal-200 dark:text-teal-700 rounded-lg px-5"
-      onClick={() => alert(`thanks to ${children}`)}
-    >
-      {children}
-    </button>
-  );
-};
+
 const components = { Button, CodeBlock };
 export default function Post({ postData }) {
   const router = useRouter();
