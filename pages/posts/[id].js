@@ -7,6 +7,21 @@ import CodeBlock from "@/components/CodeBlock";
 import Button from "@/components/Button";
 import Head from "next/head";
 import { siteTitle } from "../_document";
+import { useState } from "react";
+
+const ErrorComponent = () => {
+  const [error, setError] = useState(false);
+
+  if (error) {
+    throw new Error("Error occured");
+  }
+
+  return (
+    <button className="rounded px2 bg-green-500" onClick={() => setError(true)}>
+      ErrorFired
+    </button>
+  );
+};
 
 export async function getStaticPaths() {
   const paths = getAllPostIds();
@@ -39,6 +54,7 @@ export default function Post({ postData, pathname }) {
       <Head>
         <title>{`${postData.title} - ${siteTitle}`}</title>
       </Head>
+      <ErrorComponent />
       <article>
         <h2>pathname: {pathname}</h2>
         <h1 className={utilStyles.headingXl}>{postData.title}</h1>
