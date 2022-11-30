@@ -1,52 +1,37 @@
-import { getAllPostIds, getPostData } from "../../lib/posts";
-import Date from "@/components/Date";
-import utilStyles from "../../styles/utils.module.css";
-import { useRouter } from "next/router";
-import { MDXRemote } from "next-mdx-remote";
-import CodeBlock from "@/components/CodeBlock";
-import Button from "@/components/Button";
-import Head from "next/head";
-import { siteTitle } from "../_document";
-import { useState } from "react";
-
-const ErrorComponent = () => {
-  const [error, setError] = useState(false);
-
-  if (error) {
-    throw new Error("Error occured");
-  }
-
-  return (
-    <button className="rounded px2 bg-green-500" onClick={() => setError(true)}>
-      ErrorFired
-    </button>
-  );
-};
+import { getAllPostIds, getPostData } from '../../lib/posts'
+import Date from '@/components/Date'
+import utilStyles from '../../styles/utils.module.css'
+import { useRouter } from 'next/router'
+import { MDXRemote } from 'next-mdx-remote'
+import CodeBlock from '@/components/CodeBlock'
+import Button from '@/components/Button'
+import Head from 'next/head'
+import { siteTitle } from '../_document'
 
 export async function getStaticPaths() {
-  const paths = getAllPostIds();
+  const paths = getAllPostIds()
   return {
     paths,
     fallback: true,
-  };
+  }
 }
 
 export async function getStaticProps({ params, preview }) {
-  console.log(`>>>>>>> ${preview}`);
-  const postData = await getPostData(params.id);
+  console.log(`>>>>>>> ${preview}`)
+  const postData = await getPostData(params.id)
   return {
     props: {
       postData,
     },
-  };
+  }
 }
 
-const components = { Button, CodeBlock };
-export default function Post({ postData, pathname }) {
-  const router = useRouter();
+const components = { Button, CodeBlock }
+export default function Post({ postData }) {
+  const router = useRouter()
 
   if (router.isFallback) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>
   }
 
   return (
@@ -54,9 +39,7 @@ export default function Post({ postData, pathname }) {
       <Head>
         <title>{`${postData.title} - ${siteTitle}`}</title>
       </Head>
-      <ErrorComponent />
       <article>
-        <h2>pathname: {pathname}</h2>
         <h1 className={utilStyles.headingXl}>{postData.title}</h1>
         <div className={utilStyles.lightText}>
           <Date dateString={postData.date} />
@@ -69,5 +52,5 @@ export default function Post({ postData, pathname }) {
         )}
       </article>
     </>
-  );
+  )
 }
