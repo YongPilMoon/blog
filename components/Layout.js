@@ -1,12 +1,12 @@
-import Image from "next/image";
-import styles from "./layout.module.css";
-import utilStyles from "../styles/utils.module.css";
-import Link from "next/link";
-import Darkmode from "./Darkmode";
-import NoSSR from "./NoSSR";
-import Utterances from "./Utterances";
+import Image from 'next/image'
+import styles from './layout.module.css'
+import utilStyles from '../styles/utils.module.css'
+import Link from 'next/link'
+import Darkmode from './Darkmode'
+import NoSSR from './NoSSR'
+import Utterances from './Utterances'
 
-const name = "MOON YONGPIL";
+const name = 'YONGPIL BLOG'
 
 export default function Layout({ children, home }) {
   return (
@@ -59,5 +59,5 @@ export default function Layout({ children, home }) {
         )}
       </div>
     </div>
-  );
+  )
 }

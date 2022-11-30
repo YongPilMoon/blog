@@ -1,16 +1,13 @@
-import { Html, Head, Main, NextScript } from "next/document";
+import { Html, Head, Main, NextScript } from 'next/document'
 
-export const siteTitle = "Next.js Sample Website";
+export const siteTitle = 'Yongpil blog'
 
 export default function Document() {
   return (
     <Html>
       <Head>
         <link rel="icon" href="/favicon.ico" />
-        <meta
-          name="description"
-          content="Learn how to build a personal website using Next.js"
-        />
+        <meta name="description" content="평범한 일을 평범하지 않게 하자" />
         <meta
           property="og:image"
           content={`https://og-image.vercel.app/${encodeURI(
@@ -25,5 +22,5 @@ export default function Document() {
         <NextScript />
       </body>
     </Html>
-  );
+  )
 }
