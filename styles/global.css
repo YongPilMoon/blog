@@ -1,4 +1,28 @@
 @tailwind base;
+
+@layer base {
+  h1 {
+    @apply text-3xl;
+    font-weight: 700;
+  }
+  h2 {
+    @apply text-2xl;
+    font-weight: 700;
+    line-height: 2.5rem;
+  }
+  h3 {
+    @apply text-xl;
+    font-weight: 600;
+  }
+  P {
+    @apply text-base;
+    line-height: 1.7rem;
+  }
+  a {
+    @apply text-blue-600 underline;
+  }
+}
+
 @tailwind components;
 @tailwind utilities;
 
@@ -17,7 +41,6 @@ body {
 }
 
 a {
-  color: #0070f3;
   text-decoration: none;
 }
 
@@ -28,4 +51,10 @@ a:hover {
 img {
   max-width: 100%;
   display: block;
+}
+
+code {
+  @apply bg-stone-200;
+  @apply p-1;
+  @apply rounded-sm;
 }

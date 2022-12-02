@@ -25,14 +25,17 @@ export default function Home({ allPostsData }) {
 
       <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
         <p className={utilStyles.description}>
-          배운것을 정리하고 기록하는 블로그
+          공부한 것을 정리하고 전달하는 것을 연습하는 공간입니다.
         </p>
         <div className={utilStyles.listWrapper}>
           <ul className={utilStyles.list}>
-            {allPostsData.map(({ id, date, title }) => (
+            {allPostsData.map(({ id, date, title, description }) => (
               <li className={utilStyles.listItem} key={id}>
                 <Link href={`/posts/${id}`}>{title}</Link>
                 <br />
+                <div>
+                  <small>{description}</small>
+                </div>
                 <small className={utilStyles.lightText}>
                   <Date dateString={date} />
                 </small>

@@ -1,24 +1,34 @@
-import { useRef, useState } from "react";
-import Link from "next/link";
-import Head from "next/head";
+import { useRef, useState } from 'react'
+import Link from 'next/link'
+import Head from 'next/head'
+import { useEffect } from 'react'
 
 export default function Write() {
-  const idRef = useRef();
-  const titleRef = useRef();
-  const contentRef = useRef();
-  const [showLink, setShowLink] = useState(false);
+  const idRef = useRef()
+  const titleRef = useRef()
+  const contentRef = useRef()
+  const [showLink, setShowLink] = useState(false)
+  const [allPosts, setAllPosts] = useState([])
+
+  useEffect(() => {
+    fetch('/api/posts/')
+      .then((res) => res.json())
+      .then(({ allPostsData }) => {
+        setAllPosts(allPostsData)
+      })
+  }, [])
 
   const handleSumbit = (event) => {
-    event.preventDefault();
+    event.preventDefault()
 
-    const id = idRef.current.value;
-    const title = titleRef.current.value;
-    const content = contentRef.current.value;
+    const id = idRef.current.value
+    const title = titleRef.current.value
+    const content = contentRef.current.value
 
     if (id && title && content) {
-      fetch("/api/post/write", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      fetch('/api/post/write', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           id,
           title,
@@ -27,17 +37,17 @@ export default function Write() {
       })
         .then((response) => {
           if (response.ok) {
-            return response.json();
+            return response.json()
           }
-          throw new Error("Fetch Error");
+          throw new Error('Fetch Error')
         })
         .then((data) => {
-          setShowLink(true);
-          alert(data.message);
+          setShowLink(true)
+          alert(data.message)
         })
-        .catch((error) => alert(`request error: ${error}`));
+        .catch((error) => alert(`request error: ${error}`))
     }
-  };
+  }
 
   return (
     <>
@@ -56,6 +66,11 @@ export default function Write() {
           required
           ref={titleRef}
         />
+        <div>
+          {allPosts.map(({ title, id }) => {
+            return <div key={id}>{title}</div>
+          })}
+        </div>
         <br />
         <br />
         <textarea
@@ -76,5 +91,5 @@ export default function Write() {
         <Link href={`/posts/${idRef.current.value}`}>Created Post</Link>
       )}
     </>
-  );
+  )
 }
