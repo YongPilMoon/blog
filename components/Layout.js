@@ -10,7 +10,7 @@ const name = 'YONGPIL BLOG'
 
 export default function Layout({ children, home }) {
   return (
-    <div className="bg-white dark:bg-black text-gray-800 dark:text-gray-200 h-screen">
+    <div className="bg-white dark:bg-black text-gray-800 dark:text-gray-200">
       <div className={styles.container}>
         <NoSSR>
           <Darkmode />

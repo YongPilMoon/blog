@@ -59,6 +59,10 @@ code {
   padding: 0 2px;
 }
 
+.dark code {
+  @apply bg-stone-600;
+}
+
 li {
   list-style: inside;
 }
