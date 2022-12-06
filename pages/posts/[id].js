@@ -8,6 +8,8 @@ import Button from '@/components/Button'
 import Head from 'next/head'
 import { siteTitle } from '../_document'
 
+// const timeout = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
 export async function getStaticPaths() {
   const paths = getAllPostIds()
   return {
@@ -16,8 +18,7 @@ export async function getStaticPaths() {
   }
 }
 
-export async function getStaticProps({ params, preview }) {
-  console.log(`>>>>>>> ${preview}`)
+export async function getStaticProps({ params }) {
   const postData = await getPostData(params.id)
   return {
     props: {

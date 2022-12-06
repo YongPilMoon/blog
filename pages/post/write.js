@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import Link from 'next/link'
+// import Link from 'next/link'
 import Head from 'next/head'
 import { useEffect } from 'react'
 
@@ -7,7 +7,7 @@ export default function Write() {
   const idRef = useRef()
   const titleRef = useRef()
   const contentRef = useRef()
-  const [showLink, setShowLink] = useState(false)
+  // const [showLink, setShowLink] = useState(false)
   const [allPosts, setAllPosts] = useState([])
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export default function Write() {
           throw new Error('Fetch Error')
         })
         .then((data) => {
-          setShowLink(true)
+          // setShowLink(true)
           alert(data.message)
         })
         .catch((error) => alert(`request error: ${error}`))
@@ -87,9 +87,6 @@ export default function Write() {
           value="Create"
         />
       </form>
-      {showLink && (
-        <Link href={`/posts/${idRef.current.value}`}>Created Post</Link>
-      )}
     </>
   )
 }

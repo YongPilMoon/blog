@@ -55,6 +55,18 @@ img {
 
 code {
   @apply bg-stone-200;
-  @apply p-1;
   @apply rounded-sm;
+  padding: 0 2px;
+}
+
+li {
+  list-style: inside;
+}
+
+blockquote {
+  border: 1px solid #e7e5e4;
+  margin-left: 0px;
+  margin-right: 0px;
+  padding: 0.5rem;
+  border-left: 10px solid #e7e5e4;
 }
