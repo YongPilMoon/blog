@@ -2,6 +2,7 @@
   max-width: 40rem;
   padding: 3rem 1rem;
   margin: 0 auto;
+  min-height: 100vh;
 }
 
 .header {

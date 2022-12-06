@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Date from '../components/Date'
 import { getSortedPostsData } from '../lib/posts'
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   const allPostsData = getSortedPostsData()
 
   return {
@@ -29,18 +29,20 @@ export default function Home({ allPostsData }) {
         </p>
         <div className={utilStyles.listWrapper}>
           <ul className={utilStyles.list}>
-            {allPostsData.map(({ id, date, title, description }) => (
-              <li className={utilStyles.listItem} key={id}>
-                <Link href={`/posts/${id}`}>{title}</Link>
-                <br />
-                <div>
-                  <small>{description}</small>
-                </div>
-                <small className={utilStyles.lightText}>
-                  <Date dateString={date} />
-                </small>
-              </li>
-            ))}
+            {allPostsData
+              .filter(({ published }) => published)
+              .map(({ id, date, title, description }) => (
+                <li className={utilStyles.listItem} key={id}>
+                  <Link href={`/posts/${id}`}>{title}</Link>
+                  <br />
+                  <div>
+                    <small>{description}</small>
+                  </div>
+                  <small className={utilStyles.lightText}>
+                    <Date dateString={date} />
+                  </small>
+                </li>
+              ))}
           </ul>
         </div>
       </section>
