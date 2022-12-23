@@ -1,0 +1,110 @@
+---
+title: 'Scope & Lexical Scope'
+date: '2022-12-07'
+description: 'Scope와 Lexical Scope에 대해 알아보았습니다.'
+published: true
+---
+### Scope란?
+자바스크립트에서 변수는 코드의 어느 위치에 선언되는냐에 따라
+그 변수에 접근 할 수 있는 영역이 달라집니다. 전역에 선언된 변수는 코드 어느 부분에서도 접근 가능하고 함수내부에 선언된 변수는
+해당 함수 안에서만 접근할 수 있습니다. 이렇게 선언 위치에 따라 접근 할 수 있는 영역이 나뉘는 규칙을 스코프라고 합니다.
+자바스크립트에서 스코프는 Global Scope, Function Scope, Block Scope로 나눌 수 있습니다.
+<br/>
+### Global Scope
+- 블록 혹은 함수 밖에 선언된 변수는 Global Scope를 갖습니다.
+- Global Scope를 갖는 변수는 코드 어느 영역에서도 접근이 가능합니다.
+<br/>
+### Funtion Scope
+- 함수가 선언될 때 생성됩니다.
+- 함수 내부에 선언된 변수는 함수 내부 혹은 하위 함수에서만 접근이 가능합니다.
+- `var`로 선언된 함수는 Function Scope를 따릅니다.
+<br/>
+<CodeBlock>
+{`
+  function log() {
+    var a=1;
+    console.log(a); // 1
+  }
+
+  console.log(a); // ReferenceError: a is not defined
+`}
+</CodeBlock>
+<br/>
+### Block Scope
+- 블록이 정의 될 때 생성됩니다.
+- 블록 내부에 선언된 변수는 블록 내부에서만 접근이 가능합니다.
+- `let` 혹은 `const`로 선언된 변수는 Block Scope를 따릅니다.
+<br/>
+<CodeBlock>
+{`
+  {
+    let a=1;
+    console.log(a); // 1
+  }
+
+  console.log(a); // ReferenceError: a is not defined
+`}
+</CodeBlock>
+<br/>
+### Lexical Scope vs Dynamic Scope
+프로그래밍언어에서 스코프가 결정되는 방식은 2가지가 있습니다. 변수 혹은 함수가 **선언된 위치에 따라 스코프가 결정되는 방식**을
+`Lexical Scope`, **호출된 위치에 따라 결정되는 방식**을 `Dynamic Scope`라고 합니다. 자바스크립트를 포함한 현대 대부분의 언어는 `Lexical Scope`를 
+사용합니다. 
+
+<br/>
+<CodeBlock>
+{`
+  var a=1;
+
+  function log() {
+    console.log(a); // ?
+  }
+
+  function x() {
+    var a=2;
+    log();
+  }
+  
+  x();
+`}
+</CodeBlock>
+<br/>
+위 예제에서 `console.log(a)`는 어떤 값을 출력할까요? 얼핏 보면 `var a=2`가 정의된 후 `log` 함수가 호출 됐기 때문에 
+2가 출력될 것이라고 예상할 수 있지만 실행 시켜보면 1이 출력됩니다. 이는 `log`함수가 호출 되는 `x`함수의 스코프가 아닌 
+`log`함수가 선언된 위치의 스코프를 따르기 때문에 `log`함수의 상위에 선언된 `a` 값이 출력됩니다.
+<br/>
+자바스크립트가 `Dynamic Scope`를 사용한다고 가정하고 아래 예제 코드를 살펴봅시다.
+<br/>
+<CodeBlock>
+{`
+  // JavaScript with Dynamic Scope
+  var a=1;
+  function log() {
+    console.log(a);
+  }
+
+  void dummy1()
+  {
+      var a=2;
+      log();
+  }
+
+  void dummy2()
+  {
+      var a=3;
+      log();
+  }
+`}
+</CodeBlock>
+<br/>
+`Dynamic Scope`를 따른다고 가정하면 `log`함수 호출 전에 각 함수에서 `a`를 선언했기 때문에 첫번째 `log`함수에서는 2, 두번째 `log`함수에서는 3 될 것 입니다.
+<br/>
+## 요약
+<br />
+> - 변수 혹은 함수에 접근할 수 있는 영역이 나뉘는 규칙을 스코프라고 합니다. <br />
+> - 자바스크립트에는 Global Scope, Function Scope, Block Scope가 존재합니다. <br />
+> - 자바스크립트는 변수 혹은 함수의 선언 위치에 따라 스코프가 결정되는 Lexical Scope를 사용합니다.
+
+
+
+
