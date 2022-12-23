@@ -8,6 +8,7 @@ function CodeBlock({ children }) {
         showLineNumbers
         style={rainbow}
         codeTagProps={{ style: { background: 'none' } }}
+        language="javascript"
       >
         {children}
       </SyntaxHighlighter>
