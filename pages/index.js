@@ -25,7 +25,7 @@ export default function Home({ allPostsData }) {
 
       <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
         <p className={utilStyles.description}>
-          공부한 것을 정리하고 전달하는 것을 연습하는 공간입니다.
+          공부한 것을 정리하는 공간입니다.
         </p>
         <div className={utilStyles.listWrapper}>
           <ul className={utilStyles.list}>
