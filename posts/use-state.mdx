@@ -1,0 +1,161 @@
+---
+title: 'useState hook'
+date: '2022-12-20'
+description: '간단한 useState hook을 직접 구현해 보고 useState의 동작 원리를 이해하기 위한 글입니다.'
+published: true
+---
+
+## 상태란?
+UI 컴포넌트는 사용자의 액션에 따라 화면을 변경해야 할 경우가 있습니다. Input에 타이핑 시 입력된 텍스트를 보여주거나,
+이미지 캐로셀의 next 버튼을 클릭되면 다음 이미지를 보여주어야 합니다.
+이러한 동작들을 하기 위해선 컴포넌트는 현재 입력된 텍스트 값이나, 현재 보여주고 있는 이미지를 기억하고 있어야 하는데요,
+React에선 이와 같이 **화면 변경을 위해 컴포넌트가 기억하고 있어야 하는 값**을 상태라고 합니다.
+
+<br/>
+## useState
+React에선 컴포넌트 상태를 정의하기 위해 `useState`훅을 사용합니다.
+
+
+<br />
+<CodeBlock>
+  {`[count, setCount] = useState(0);`}
+</CodeBlock>
+<br />
+
+`useState`훅은 초깃값을 인자로 받고 현재 상태 값과 값을 업데이트할 수 있는 `setter function`을 배열로 리턴합니다.
+상태 값으로는 문자, 숫자, 오브젝트 등 어떤 타입의 값이든 들어갈 수 있습니다.
+그런데 값을 업데이트하는 것만으로 사용자는 변경된 화면을 볼 수 있을까요?
+<br/>
+화면에서 업데이트된 값이 보이려면 해당 컴포넌트는 새로운 값을 반영하여 다시 렌더링 되어야 합니다. 이러한 작업도 `setter function`을 통해 이루어집니다.
+`setter function`은 상태 값을 업데이트한 후 새로운 값이 이전 값과 다르다면 React에게 해당 컴포넌트 렌더를 trigger 시킵니다.
+<br/>
+
+## useState 구현하기
+위해서 살펴본 `useState`를 직접 구현해 보겠습니다.
+<br />
+<CodeBlock>
+  {`
+   function Count() {
+    [count, setCount] = useState(0);
+    
+    return <div>{count}</div>
+   }
+`}
+
+</CodeBlock>
+<br />
+먼저 위 코드에서 `useState`의 값이 어느 곳에 저장되어 있는지 생각해 봅시다.
+`useState`에서 값을 반환해 주기 때문에 `useState`안에 값이 저장되어 있을까요? `useState`안에 값이 저장되어 있다고 가정하면 `useState`를 다음과 같이 구현할 수 있을 겁니다.
+
+<br />
+<CodeBlock>
+  {`
+   function useState(initialValue) {
+    let value = initialValue;
+
+    const setValue = (nextValue) => {
+        value = nextValue;
+    }
+
+    return [value, setValue]
+   }
+
+    const [count, setCount] = useState(0);
+    console.log(count); // 0
+    setCount(1);
+    console.log(count); // 0
+`}
+
+</CodeBlock>
+<br />
+
+하지만 위와 같이 구현할 경우 `setCount`로 값을 업데이트해도 `count` 값은 변경되지 않습니다.
+이는 `count`는 단순히 `useState`로부터 반환된 값인 반면 `setCount`에 의해 변경된 값은 `setValue`에서 참조하는 별도의 클로저 값이기 때문입니다.
+`value`를 값이 아닌 함수로 전달하면 문제를 해결할 수 있습니다. 
+
+<br />
+<CodeBlock>
+  {`
+   function useState(initialValue) {
+    let _value = initialValue;
+
+    let value = () => _value
+
+    const setValue = (nextValue) => {
+        _value = nextValue;
+    }
+
+    return [value, setValue]
+   }
+
+    const [count, setCount] = useState(0);
+    console.log(count()); // 0
+    setCount(1);
+    console.log(count()); // 1
+`}
+
+</CodeBlock>
+<br />
+
+`value`를 함수로 변경하면 `value`는 클로저 함수가 되고 
+`useState`함수 실행이 완료돼도 `value`함수에서 `_value`값을 참조하고 있기 때문에
+변경된 `_value`값을 반환할 수 있게 됩니다.
+하지만 React에서 `useState`는 함수가 아닌 값을 반환합니다. 이러한 문제를 해결하기 위해선 어떻게 수정할 수 있을까요?
+`value`를 `useState`가 아닌 `useState`의 상위 스코프에 정의하고 `render`함수를 이용해 
+값이 변경될 때마다 새로운 값을 반환해 주면 `count`를 함수가 아닌 값으로 사용할 수 있습니다.
+
+<br />
+<CodeBlock>
+  {`
+  const React = (function() {
+    let value; // value를 useState의 상위 스코프에서 정의하여 useState함수 종료 후에도 값을 유지할 수 있게 합니다.
+    function useState(initialValue) {
+         value = value || initialValue; // value 값이 존재하면 기존 value값을 넣어줍니다.
+        const setValue = (nextValue) => {
+            value = nextValue;
+        }
+        return [value, setValue]
+    }
+    
+    // React와 같이 setValue후 render함수를 실행 시켜줍니다.
+    function render(Component) {
+      const component = Component();
+      component.render();
+      return component
+    }
+  
+    return {
+      useState,
+      render
+    }
+})();
+
+function Counter() {
+  const [count, setCount] = React.useState(0);  
+  
+  return {
+    click: () => setCount(count + 1),
+    render: () => console.log(count)
+  }
+}
+
+
+let counter
+counter = React.render(Counter) // 0
+counter.click()
+counter = React.render(Counter) // 1
+`}
+
+</CodeBlock>
+<br />
+
+`value`를 `useState`가 아닌 `useState`의 상위 스코프에서 선언 함으로써 `useState`함수 실행이 종료돼도
+`value`값을 저장할 수 있게 변경되었습니다. 또한 React와 `setCount` 함수 수행 후 `render`함수를 수행해 주므로써
+업데이트된 `value`값을 `count`에 반환할 수 있게 되었습니다.
+<br/>
+이번 글에서 `useState`의 사용법과 직접 `useState`를 구현해 봄으로써 동작원리를 이해해 보았습니다.
+작성된 `useState`코드는 [swyx 님의 글](https://www.netlify.com/blog/2019/03/11/deep-dive-how-do-react-hooks-really-work/)을 참조하였습니다. `useState`외에 다른 훅을 구현한 코드도 있으니
+살펴보면 hook을 이해하는데 도움이 될 것 같습니다.
+<br/>
+## Reference
+- [deep-dive-how-do-react-hooks-really-work](https://www.netlify.com/blog/2019/03/11/deep-dive-how-do-react-hooks-really-work/)
