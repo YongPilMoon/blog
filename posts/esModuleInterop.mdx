@@ -1,0 +1,81 @@
+---
+title: 'No default export found in imported module "react"'
+date: '2022-12-12'
+description: 'tsconfig esModuleInterop 옵션에 대해 알아보았습니다.'
+published: true
+---
+
+## 에러
+타입스크립트로 리액트 개발 환경을 구축하다 보면 종종 아래와 같은 에러를 만납니다.
+이 에러는 왜 발생하고 어떻게 해결할 수 있을까요?
+<br/>
+`No default export found in imported module "react"`
+<br/>
+## 원인
+에러 메시지를 보면 리액트를 불러오는데 default export가 없다는 내용입니다.
+일단 에러가 발생한 import 문을 살펴보겠습니다.
+<br/>
+`import React from 'react';`
+<br/>
+리액트를 `ES Module`의 `Default import` 방식으로 불러오고 있습니다. 하지만 `node_modules`를 확인해 보면
+리액트는 `CJS` 방식인 `module.export`로 내보내지는 것을 확인할 수 있습니다.
+<br/>
+<CodeBlock>
+{`
+    // node_modules/react/index.js
+    if (process.env.NODE_ENV === 'production') {
+        module.exports = require('./cjs/react.production.min.js');
+    } else {
+        module.exports = require('./cjs/react.development.js');
+    }
+`}
+</CodeBlock>
+<br/>
+위 에러는 `CJS` 방식으로 내보낸 리액트를 `ESM`의 `Default import` 방식으로 불러와 발생한 에러입니다.
+<br/>
+## 해결방안
+`Default import`가 아닌 `Namesapce import`를 사용하면 이러한 에러를 해결할 수 있습니다.
+원칙적으로 타입스크립트에서는 `CJS`모듈을 불러올 때 `Namesapce import` 혹은 `Named import`를 사용해 주어야 합니다.
+<br/>
+`import * as React from "react";`
+<br/>
+그렇다면 타입스크립트에서는 `CJS`방식으로 내보낸 모듈을 `Default import`로 사용할 수는 없는 걸까요?
+`tsconfig`의 `esModuleInterop` 옵션을 `true`로 설정해주면 `CJS` 모듈도 `Default import`로 사용할 수 있습니다.
+`esModuleInterop`은 `CJS` 모듈도 `EsModule` 처럼 불러올 수 있게 해주는 옵션입니다.
+<br/>
+## 번외
+실제로 타입스크립트에서 `CJS`모듈이 잘 불러와지는지 테스트해 보았습니다.
+<br/>
+utils.js 파일을 만들고 `CJS` 문법으로 내보내 줍니다.
+<br/>
+<CodeBlock>
+{`
+// utils.js
+function add(a, b) {
+    return a + b;
+}
+
+module.exports = {
+    add,
+};
+`}
+</CodeBlock>
+<br/>
+JS 모듈을 불러와 사용하기 위해선 d.ts 파일도 만들어 줍니다.
+<CodeBlock>
+{`
+// utils.d.ts
+export function add(a: number, b: number): number;
+ `
+}
+</CodeBlock>
+<br/>
+잘 동작하는 걸 확인할 수 있었습니다.
+<CodeBlock>
+{`
+// index.ts
+import { add } from "./utils";
+
+console.log(add(1, 3)); // 4
+`}
+</CodeBlock>
