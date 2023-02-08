@@ -1,0 +1,30 @@
+---
+title: '[알고리즘] 테이블 해시 함수'
+date: '2022-02-08'
+description: ''
+published:  true
+---
+
+[문제링크](https://school.programmers.co.kr/learn/courses/30/lessons/147354?language=javascript)
+<br/>
+
+<CodeBlock>
+{`
+const compareFunction = (a, b, col) => a[col - 1] - b[col - 1] || b[0] - a[0];
+
+function solution(data, col, row_begin, row_end) {
+    data.sort((a, b) => compareFunction(a, b, col))
+    
+    const slicedData = data.slice(row_begin - 1, row_end)
+    
+    return answer = slicedData
+        .map((datam, i) => datam
+             .map(v => v % (row_begin + i))
+             .reduce((acc, col) => acc + col, 0))
+        .reduce((acc, v) => acc ^ v)
+}
+`}
+</CodeBlock>
+<br/>
+- 이중 sort 처리
+- XOR 연산
