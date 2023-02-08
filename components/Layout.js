@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import styles from './layout.module.css'
 import Link from 'next/link'
 import Darkmode from './Darkmode'
 import NoSSR from './NoSSR'
@@ -9,15 +8,18 @@ const name = 'YONGPIL BLOG'
 
 export default function Layout({ children, home }) {
   return (
-    <div className="bg-white dark:bg-black text-gray-800 dark:text-gray-200">
-      <div className={styles.container}>
-        <NoSSR>
-          <Darkmode />
-        </NoSSR>
-        <header className={styles.header}>
+    <div>
+      <div className="container mx-auto pb-8">
+        <div className="p-4 mb-6">
+          <NoSSR>
+            <Darkmode />
+          </NoSSR>
+        </div>
+        <header className="flex flex-col items-center mb-6">
           {home ? (
             <>
               <Image
+                className="rounded-full mb-4"
                 priority
                 src="/images/profile.jpg"
                 height={144}
@@ -30,6 +32,7 @@ export default function Layout({ children, home }) {
             <>
               <Link href="/">
                 <Image
+                  className="rounded-full mb-4"
                   priority
                   src="/images/profile.jpg"
                   height={108}
@@ -43,11 +46,11 @@ export default function Layout({ children, home }) {
             </>
           )}
         </header>
-        <main>{children}</main>
+        <main className="mb-6">{children}</main>
         {!home && (
           <>
             <Utterances />
-            <div className={styles.backToHome}>
+            <div>
               <Link href="/">← Back to home</Link>
             </div>
           </>

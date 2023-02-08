@@ -21,17 +21,17 @@ export default function Home({ allPostsData }) {
         <title>{siteTitle}</title>
       </Head>
       <section>
-        <p>공부한 것을 정리하는 공간입니다.</p>
         <div>
-          <ul>
+          <ul className="grid gap-4">
             {allPostsData
               .filter(({ published }) => published)
               .map(({ id, date, title, description }) => (
                 <li key={id}>
-                  <Link href={`/posts/${id}`}>{title}</Link>
-                  <br />
+                  <Link href={`/posts/${id}`} className="text-xl font-bold">
+                    {title}
+                  </Link>
                   <div>{description}</div>
-                  <small>
+                  <small className="text-sm text-gray-400">
                     <Date dateString={date} />
                   </small>
                 </li>

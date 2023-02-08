@@ -1,12 +1,17 @@
 /* eslint-disable no-undef */
 module.exports = {
-  darkMode: "class",
+  darkMode: 'class',
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}",
+    './pages/**/*.{js,ts,jsx,tsx}',
+    './components/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
-    extend: {},
+    container: {
+      padding: '2rem',
+    },
+    screens: {
+      lg: '1024px',
+    },
   },
   plugins: [],
-};
+}
