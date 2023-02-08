@@ -1,0 +1,38 @@
+---
+title: '[알고리즘] 호텔대실'
+date: '2022-02-08'
+description: ''
+published:  true
+---
+
+[문제링크](https://school.programmers.co.kr/learn/courses/30/lessons/155651?language=scala)
+<br/>
+
+<CodeBlock>
+{`
+  
+const timeToMins = (time) => {
+        const [hour, minutes] = time.split(":").map(Number)
+        return hour * 60 + minutes;
+}
+
+function solution(book_time) {
+    const timeArr = Array.from({length: timeToMins('23:59') + 10}, () => 0)
+    
+    book_time.forEach(time => {
+        const [startTime, endTime] = time;
+        let startMinutes = timeToMins(startTime);
+        const endMinutes = timeToMins(endTime) + 9;
+        
+        for(startMinutes; startMinutes <= endMinutes; startMinutes++) {
+            timeArr[startMinutes]++
+        }
+    })
+
+    return Math.max(...timeArr);
+}
+`}
+</CodeBlock>
+<br/>
+예약시간을 분 단위로 나눈 후 배열에 각 분에 예약된 건수를 저장한다. <br/>
+예약된 최대 건수를 구한다.
