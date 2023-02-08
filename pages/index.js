@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import { siteTitle } from '../pages/_document'
-import utilStyles from '../styles/utils.module.css'
 import Link from 'next/link'
 import Date from '../components/Date'
 import { getSortedPostsData } from '../lib/posts'
@@ -21,24 +20,18 @@ export default function Home({ allPostsData }) {
       <Head>
         <title>{siteTitle}</title>
       </Head>
-      <section className={utilStyles.headingMd}></section>
-
-      <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
-        <p className={utilStyles.description}>
-          공부한 것을 정리하는 공간입니다.
-        </p>
-        <div className={utilStyles.listWrapper}>
-          <ul className={utilStyles.list}>
+      <section>
+        <p>공부한 것을 정리하는 공간입니다.</p>
+        <div>
+          <ul>
             {allPostsData
               .filter(({ published }) => published)
               .map(({ id, date, title, description }) => (
-                <li className={utilStyles.listItem} key={id}>
+                <li key={id}>
                   <Link href={`/posts/${id}`}>{title}</Link>
                   <br />
-                  <div>
-                    <small>{description}</small>
-                  </div>
-                  <small className={utilStyles.lightText}>
+                  <div>{description}</div>
+                  <small>
                     <Date dateString={date} />
                   </small>
                 </li>

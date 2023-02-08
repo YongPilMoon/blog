@@ -1,6 +1,6 @@
 import { getAllPostIds, getPostData } from '../../lib/posts'
 import Date from '@/components/Date'
-import utilStyles from '../../styles/utils.module.css'
+
 import { useRouter } from 'next/router'
 import { MDXRemote } from 'next-mdx-remote'
 import CodeBlock from '@/components/CodeBlock'
@@ -42,14 +42,11 @@ export default function Post({ postData }) {
       </Head>
       <article className="flex flex-col gap-8">
         <div>
-          <h1 className={utilStyles.headingXl}>{postData.title}</h1>
-          <div className={utilStyles.lightText}>
+          <h1>{postData.title}</h1>
+          <div>
             <Date dateString={postData.date} />
           </div>
         </div>
-        {postData.contentHtml && (
-          <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
-        )}
         <div>
           {postData.mdxSource && (
             <MDXRemote {...postData.mdxSource} components={components} />
