@@ -10,7 +10,7 @@ module.exports = {
       padding: '2rem',
     },
     screens: {
-      lg: '1024px',
+      lg: '964px',
     },
   },
   plugins: [],
