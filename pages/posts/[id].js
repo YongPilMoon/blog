@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { MDXRemote } from 'next-mdx-remote'
 import CodeBlock from '@/components/CodeBlock'
 import Button from '@/components/Button'
+import Image from '@/components/Image'
 import Head from 'next/head'
 import { siteTitle } from '../_document'
 
@@ -27,7 +28,7 @@ export async function getStaticProps({ params }) {
   }
 }
 
-const components = { Button, CodeBlock }
+const components = { Button, CodeBlock, Image }
 export default function Post({ postData }) {
   const router = useRouter()
 
