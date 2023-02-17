@@ -1,0 +1,45 @@
+---
+title: 'Event Loop'
+date: '2022-12-12'
+description: '자바스크립트에서 비동기 작업이 어떻게 수행되는지 적어보았습니다.'
+published: false
+---
+
+자바스크립트는 동기적 싱글스레드 언어입니다.
+
+이 말은 자바스크립트는 위에서 아래로 순차적으로 실행되고 동시에 두개의 작업을 처리 할 수 없음을 의미합니다.
+그렇다면 흔히 비동기 작업이라고 일컷는 `fetch`, `setTimeOut`등의 작업은 어떻게 실행되는 걸까요?
+<br/>
+
+사실 `fetch`, `SetTimeOut`함수는 자바스크립트가 아닙니다. 자바스크립트 자체는 데이터를 fetch하고 타이머를 조작하는
+능력은 없습니다. 이는 브라우저의 Web API에 의해 실행이되는 것이죠. 자바스크립트에서는 window를 통해 다양한 Web API를 호출 할 수 있습니다.
+<br/>
+
+<CodeBlock>
+{`
+  console.log('Start');
+  setTimeOut(function cb {
+    console.log('Callback');
+  }, 5000)
+  console.log('End')
+`}
+</CodeBlock>
+<br/>
+
+위 자바스크립트를 실행하면 먼저 글로벌 컨텍스트가 만들어지고 콘솔에 'Start'가 출력됩니다. 
+그 다음 setTimeOut이 호출 되면 web api에 cb 함수가 등록이 되고 Timer가 5초를 샙니다.
+이 후 다음줄인 'End'가 콘솔에 출력이 되고 5초가 지나면 cb 함수는 callback Queue에 들어갑니다.
+이벤트 루프는 call statck 이 모두 비워진 걸 확인 후 call back queue의 cb 함수를 
+callstatck에 전달하고 call stack을 이를 수행시킵니다.
+
+
+그렇다면 5초가 지난 뒤 webapi는 왜 call stack에 바로 전달하지 않고 callback queue를 거쳐 task를 전달할가요?
+그건 
+
+
+자바스크립트의 모든 작업은 실행컨테스트를 관리하는 Call Stack에서 수행이 됩니다.
+Call Stack은 단지 정해진일을 즉각적으로 처리만할 뿐 SetTimeOut의 콜백 함수를 정해진 시간만큼 기다리다가 처리할 수 없습니다.
+
+그렇다면 그 역활을 해줄만한 누군가가 필요할 텐데요 그게 마로 event loop 입니다.
+이벤트루프는 call stack과 callback queue사이를 무한히 관찰하면서 call stack이 이 비워졌을 때 
+task를 집어 넣어줍니다. 

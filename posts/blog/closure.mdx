@@ -1,0 +1,104 @@
+---
+title: 'Lexical Enviroment & Closure'
+date: '2022-12-07'
+description: ''
+published:  false
+---
+
+### Lexical Enviroment
+변수의 스코프는 변수가 선언된 위치에 따라 결정이 된다는 것을 알았습니다. 그러면 자바스크립트에서 이러한 정보는 어디에 저장이 될까요?
+바로 Lexical Enviroment라는 곳에 저장이 됩니다. 자바스크립트에서는 함수가 생성될 때마다 실행 컨텍스트라는 것이 같이 생성이 된는데
+실행 컨텍스트안에는 Lexical Enviroment가 포함 되어 있습니다.
+Lexical Enviroment에는 함수 내부에 선언된 식별자의 정보와 `부모 환경의 Lexical Enviroment의 참조`를 가지고 있습니다.
+코드 실행 과정에서 식별자를 참조할 때 먼저 함수 내부선언된 식별자인지 찾고 만약 식별자가 없다면 
+정의된 부모환경의 Lexical Enviroment를 따라가 찾습니다. 이를 `Scope Chaining`이라고 합니다.
+<br/>
+### Closure
+MDN에서 클로저를 다음과 같이 정의하고 있습니다.
+<br/>
+> A closure is the combination of a function bundled together (enclosed) with references to its surrounding state (the lexical environment).
+<br/>
+
+Closure 이해하기 위해선 먼저 스코프에 대한 개념이 필요합니다.
+<br/>
+## 스코프
+자바스크립트에서 `var`는 함수단위 스코프를 가지고 es6에서 추가된 `let`, `const`는 블록 단위 스코프를 가진다고 말합니다.
+여기서 스코프는 무엇을 의미하는 걸까요? 스코프는 코드에서 변수나 함수가 접근할 수 있는 범위를 말합니다.
+
+<br/>
+<CodeBlock>
+{`
+  
+`}
+</CodeBlock>
+<br/>
+
+
+<br/>
+<CodeBlock>
+{`
+  function x() {
+    const a=7;
+    function y() {
+      console.log(a); // 7
+    }
+    y();
+  }
+  x();
+`}
+</CodeBlock>
+<br/>
+
+위 코드에서 변수 a는 함수 x, y에서 접근 가능함으로
+`변수 a의 스코프는 함수 x, y가 됩니다.`
+
+
+함수 y에서는 함수 y, x, 글로벌 영역에 선언된 변수에 접근이 가능함으로 `함수 y의 스코프는 
+함수 y, x, 글로벌 영역이 됩니다.`
+
+이러한 스코프는 언제, 어떻게 결정이 되는 걸까요?
+
+<br/>
+자바스크립트는 정적 스코프언어로 함수가 정의될 때 스코프가 정해집니다.
+<br/>
+<CodeBlock>
+{`
+  function x() {
+    var a=7;
+    function y() {
+      console.log(a); // 7
+    }
+    y();
+  }
+  var a=10;
+  x();
+`}
+</CodeBlock>
+<br/>
+위 코드에서 10이 아닌 7이 출력된 이유는
+함수 y가 정의됬을 때 가장 근접한 스코프의 a값이 7이기 때문입니다. 
+이렇게 자바스크립트에서는 함수 내 식별자가 값을 찾기 위해서 
+먼저 함수 자신의 스코프(local environment)를 확인하고 없다면 함수를 둘러싸고 있는 부모 스코프를 찾습니다.
+## lexical Enviroment
+
+
+## Closure
+MDN에서 클로저를 다음과 같이 정의하고 있습니다.
+<br/>
+> A closure is the combination of a function bundled together (enclosed) with references to its surrounding state (the lexical environment).
+<br/>
+
+클로저는 함수와 함수를 둘러싸고 있는 상태(lexical environment)의 조합입니다. 
+여기서 함수를 둘러싸고 있는 상태라는 것은 무엇을 의미하는 걸까요?
+<br/>
+
+
+
+lexical enviroment
+자바스크립트는 정적 스코프 언어로 함수가 정의 될때 함수의 스코프를 가고
+
+자바스크립트에서는 함수내부에서 함수외부에 선언된 변수에 접근할 수 있습니다. 이는 함수가 생성될때 외부 환경에 대한 reference를 가지고 있기 때문입니다.
+
+함수 y는 함수 외부 변수(a)에 접근을 하고 있기 때문에 함수 y는 클로저입니다.
+위 코드를 실행 시켜보면 개발자 도구를 통해서도 Closure를 확인 할 수 있습니다.
+<img src="/images/closure1.png" />

@@ -4,14 +4,41 @@ import NoSSR from './NoSSR'
 import Image from 'next/image'
 
 const name = 'YONGPIL BLOG'
+const menus = [
+  {
+    title: 'BLOG',
+    category: 'blog',
+  },
+  {
+    title: '알고리즘',
+    category: 'algorithm',
+  },
+]
+function Menu({ title, category }) {
+  return (
+    <Link
+      href={`/?category=${category}`}
+      className="text-lg font-bold text-white"
+    >
+      {title}
+    </Link>
+  )
+}
 
 function Header({ home }) {
   return (
     <>
       <div className="p-4 mb-6">
-        <NoSSR>
-          <Darkmode />
-        </NoSSR>
+        <div className="flex items-center justify-between">
+          <nav className="grid grid-flow-col gap-4">
+            {menus.map(({ title, category }) => (
+              <Menu key={title} title={title} category={category} />
+            ))}
+          </nav>
+          <NoSSR>
+            <Darkmode />
+          </NoSSR>
+        </div>
       </div>
       <div className="flex flex-col items-center mb-6">
         {home ? (

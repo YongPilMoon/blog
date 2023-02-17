@@ -1,0 +1,69 @@
+---
+title: 'How Emeotion.js work'
+date: '2022-12-30'
+description: 'CSS-in-JS의 장단점과 emotion이 어떻게 동작하는지 알아보았습니다.'
+published: false
+---
+
+
+## 목차
+- why CSS-in-JS
+- how-emotion.js-work
+<br/>
+
+평소 React 스타일링을 위해 Emotion.js를 사용하고 있었는데 정작 Emotion.js가 어떠한 장단점이 있고
+왜 사용하는지에 대한 고민은 못해 본것 같습니다. 이에 대해 공부하고 정리하기 위한 글입니다.
+<br/>
+## Why CSS-in-JS
+CSS-in-JS가 기존 CSS-in-CSS에 비해 갖는 이점은 무엇일까요? 먼저 CSS-in-JS가 무엇인지 간략하게 살펴 보겠습니다.
+CSS-in-JS는 말그대로 CSS를 JS파일에서 사용하는 것을 말합니다. 대표적인 라이브러리로는 `styled-components`, `emotion.js`, `list` 등이 있습니다.
+
+<CodeBlock>
+  {`
+    import { css } from 'emotion/react';
+
+    const buttonStyle = css'
+        color: red;
+    ';
+
+    function Button() {
+        return <button css={css}></button>
+    }
+ `}
+</CodeBlock>
+
+이렇게 css를 JS안에서 정의하고 사용할 수 있는데요, 그렇다면 어떤 이점들이 있기에 
+이러한 라이브러리들이 만들어지게 되었을까요?
+<br/>
+1. colocation
+개인적으로 가장 큰 이점은 colocation이라고 생각합니다. colocation이란
+관련된 관심사를 갖는 코드들을 가능한 가까이 배치한다는 개념입니다.
+Css-in-JS를 이용하면 버튼의 스타일 코드를 버튼 컴포넌트 코드들과 같은 파일에 놓을 수 있습니다.
+물론 별도의 button.css 파일을 만들어서 Button.js와 같이 관리할 수 도 있습니다. 그러나 프로젝트가 커질 수록
+컴포넌트 생성시 매번 .css파일을 만들어야하는 수거로움과 코드 수정과정에서 더 이상 사용되지 않는 
+css제거를 누락하는 등의 관리 이슈가 발생하기 쉽습니다. 이러한 문제점을 CSS-in-JS는 
+한 파일에서 관리함으로써 해결 할 수 있습니다.
+<br/>
+2. 자바스크립트 변수를 style에 사용할 수 있습니다.
+emotion.js를 사용하면 props에 따라 동적인 스타일을 적용할 수 있습니다.
+상태에 따른 클레스를 정의하여 클래스를 편경해 줌으로써 css 파일을 이용해서도 이를 구현할 수있습니다. 
+하지만 상태에 따른 스타일을 작성하기위해 별도 클래스 이름을 지어주고 
+별도 파일에 작성하는 것이 번거롭게 느껴졌습니다.
+3. 스코프
+css 전역입니다. 물론 css module을 사용하면 지역적으로 사용할 수 있습니다.
+이러한 고민은 css-in-js도 컴포넌트별로 스코프를 지정해 줌으로 써 해결할 수 있습니다.
+<br/>
+그런데 이러한 장점만 존제할까요? 
+여러 CSS-IN-JS관련 글을 찾아보면 런타임에 방대한 양의 스타일이 자주 변경되는 
+환경에서는 런타임 오버헤드를 발생 시킨다고 합니다. 이러한 이유를
+emotion.js가 어떻게 동작하는지에 대해 알아보면서 파악해 보겠습니다.
+<br/>
+## how-emotion.js-work
+css-in-js의 동작 방식은 크게 Runtime, Zero-Runtime으로 나눌 수 있습니다. Runtime css-in-js는 프로그램 실행중에 JS에서 CSS를 추출하여 적용하는 것을 의미하고,
+Zero-Runtime은 빌드시점에 CSS 파일을 생성하는 것을 의미합니다.
+<br/>
+대표적인 Runtime 리아브러리인 Emotion.js가 어떻게 동작하는지 조금 더 자세하게 알아보겠습니다.
+
+
+
+

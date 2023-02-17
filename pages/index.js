@@ -4,9 +4,10 @@ import Link from 'next/link'
 import Date from '../components/ui/Date'
 import { getSortedPostsData } from '../lib/posts'
 
-export async function getStaticProps() {
-  const allPostsData = getSortedPostsData()
 
+export function getServerSideProps(context) {
+  const category = context.query.category || 'blog'
+  const allPostsData = getSortedPostsData(category)
   return {
     props: {
       allPostsData,
@@ -25,9 +26,12 @@ export default function Home({ allPostsData }) {
           <ul className="grid gap-4">
             {allPostsData
               .filter(({ published }) => published)
-              .map(({ id, date, title, description }) => (
+              .map(({ id, category, date, title, description }) => (
                 <li key={id}>
-                  <Link href={`/posts/${id}`} className="text-xl font-bold">
+                  <Link
+                    href={`posts/${category}/${id}`}
+                    className="text-xl font-bold"
+                  >
                     {title}
                   </Link>
                   <div>{description}</div>

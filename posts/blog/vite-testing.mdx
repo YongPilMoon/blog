@@ -1,0 +1,53 @@
+---
+title: 'vite에 테스트 적용하기'
+date: '2022-02-13'
+description: ''
+published:  false
+---
+
+## vitest
+- vite 기반 unit test framework
+- 기본적으로 프로젝트에 설정되어있는 vite.config.js를 사용하기 때문에 별도의 테스트 환경 구성이 필요없다.
+- vite에서 jest를 수행하려면 별도의 바벨 설정이 필요하다.
+
+<br/>
+<br/>
+## Matcher
+- `toBe`: 숫자나 문자등 기본값을 비교하기 위해 사용
+- `toEqual`: 객체나 배열을 비교하기 위해 사용
+- `toStrictEqual`: `toEqual` 보다 엄격하게 객체나 배열을 비교한다. 객체 비교시 값이 undefined인 속성이 있어도 `toEqual`에서는 성공하지만 `toStrictEqual` 에서는 실패한다.
+<CodeBlock>
+  {`
+    //fn.js
+    export const fn = {
+      makeUser: (name, age) => ({ name, age, gender: undefined }),
+    };
+
+    //test.fn.js
+    //성공
+    test("이름과 나이를 전달받아서 객체를 전달해줘", () => {
+      expect(fn.makeUser("Nick", 34)).toEqual({
+        name: "Nick",
+        age: 34,
+      });
+    });
+
+    // 실패
+    test("이름과 나이를 전달받아서 객체를 전달해줘", () => {
+      expect(fn.makeUser("Nick", 34)).toStrictEqual({
+        name: "Nick",
+        age: 34,
+      });
+    });
+`}
+
+</CodeBlock>
+- `toBeNull`
+- `toBeDefined`: undefined가 아니어야한다.
+- `toBeUndefined`
+- `toBeTruthy`
+- `toBeFalsy`
+- `toBeGreaterThan`: 크다
+- `toBeGreaterThanOrEqual`: 크거나 같다
+- `toBeLessThan`: 작다
+- `toBeLessThanOrEqual`: 작거나 같다
