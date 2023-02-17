@@ -1,11 +1,11 @@
 import { getAllPostIds, getPostData } from '../../lib/posts'
-import Date from '@/components/Date'
+import Date from '@/components/ui/Date'
 
 import { useRouter } from 'next/router'
 import { MDXRemote } from 'next-mdx-remote'
 import CodeBlock from '@/components/CodeBlock'
-import Button from '@/components/Button'
-import Image from '@/components/Image'
+import Button from '@/components/ui/Button'
+import Image from '@/components/ui/Image'
 import Head from 'next/head'
 import { siteTitle } from '../_document'
 

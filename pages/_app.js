@@ -1,4 +1,4 @@
-import Layout from '@/components/Layout'
+import Layout from '@/components/ui/Layout'
 import '../styles/global.css'
 import { useRouter } from 'next/router'
 import ErrorBoundary from '@/components/ErrorBoundary'

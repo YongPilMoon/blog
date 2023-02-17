@@ -1,8 +1,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import Darkmode from './Darkmode'
-import NoSSR from './NoSSR'
-import Utterances from './Utterances'
+import Darkmode from '../Darkmode'
+import NoSSR from '../NoSSR'
+import Utterances from '../Utterances'
 
 const name = 'YONGPIL BLOG'
 

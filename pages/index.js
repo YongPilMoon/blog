@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { siteTitle } from '../pages/_document'
 import Link from 'next/link'
-import Date from '../components/Date'
+import Date from '../components/ui/Date'
 import { getSortedPostsData } from '../lib/posts'
 
 export async function getStaticProps() {

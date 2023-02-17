@@ -3,6 +3,7 @@ import { useRef, useState } from 'react'
 import Head from 'next/head'
 import { useEffect } from 'react'
 
+new Promise()
 export default function Write() {
   const idRef = useRef()
   const titleRef = useRef()
