@@ -1,0 +1,69 @@
+---
+title: '소수 만들기'
+date: '2022-02-17'
+description: '조합, 소수'
+published:  true
+---
+
+[문제링크](https://school.programmers.co.kr/learn/courses/30/lessons/12977?language=javascript)
+<br/>
+### 문제 설명
+주어진 숫자 중 3개의 수를 더했을 때 소수가 되는 경우의 개수를 구하려고 합니다. 숫자들이 들어있는 배열 nums가 매개변수로 주어질 때, nums에 있는 숫자들 중 서로 다른 3개를 골라 더했을 때 소수가 되는 경우의 개수를 return 하도록 solution 함수를 완성해주세요.
+
+<br/>
+### 제한 사항
+- nums에 들어있는 숫자의 개수는 3개 이상 50개 이하입니다.
+- nums의 각 원소는 1 이상 1,000 이하의 자연수이며, 중복된 숫자가 들어있지 않습니다.
+
+<br/>
+
+<CodeBlock>
+{`
+// 1. 아이디어
+// 3개의 수로 만들수 있는 모든 조합을 구한뒤
+// 소수인지 판단한다.
+
+const getCombinations = (arr, num) => {
+    const result = [];
+    
+    if (num === 1) {
+        return arr.map(v => [v]);
+    }
+    
+    arr.forEach((fixed, index, origin) => {
+        const rest = origin.slice(index + 1);
+        const combinations = getCombinations(rest, num - 1);
+        const attached = combinations.map(v => [fixed, ...v]);
+        result.push(...attached);
+    })
+    
+    return result
+}
+
+const isPrimeNumber = (num) => {
+    let isPrime = true;
+    
+    if(num === 1) return false;
+    
+    for(let i=2; i<= Math.ceil(Math.sqrt(num)); i++) {
+        if(num % i === 0) isPrime = false
+    }
+    return isPrime
+}
+
+function solution(nums) {
+    var answer = 0;
+    
+    const combinations = getCombinations(nums, 3);
+    
+    for(const combination of combinations) {
+        const sum = combination.reduce((sum, num) => sum + num, 0);
+        if(isPrimeNumber(sum))
+            answer++
+    }
+    return answer;
+}
+`}
+</CodeBlock>
+<br/>
+- 재귀함수 활용 사전 리스트 만들기
