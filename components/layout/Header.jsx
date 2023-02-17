@@ -3,7 +3,7 @@ import Link from 'next/link'
 import NoSSR from './NoSSR'
 import Image from 'next/image'
 
-const name = 'YONGPIL BLOG'
+const name = 'HELLO WORLD'
 const menus = [
   {
     title: 'BLOG',

@@ -3,11 +3,11 @@ import { siteTitle } from '../pages/_document'
 import Link from 'next/link'
 import Date from '../components/ui/Date'
 import { getSortedPostsData } from '../lib/posts'
+import { useRouter } from 'next/router'
+import { useLayoutEffect } from 'react'
 
-
-export function getServerSideProps(context) {
-  const category = context.query.category || 'blog'
-  const allPostsData = getSortedPostsData(category)
+export function getStaticProps() {
+  const allPostsData = getSortedPostsData()
   return {
     props: {
       allPostsData,
@@ -16,6 +16,15 @@ export function getServerSideProps(context) {
 }
 
 export default function Home({ allPostsData }) {
+  const router = useRouter()
+  const categoryQuery = router.query.category
+
+  useLayoutEffect(() => {
+    if (!categoryQuery) {
+      router.push('/?category=blog')
+    }
+  }, [])
+
   return (
     <>
       <Head>
@@ -25,7 +34,10 @@ export default function Home({ allPostsData }) {
         <div>
           <ul className="grid gap-4">
             {allPostsData
-              .filter(({ published }) => published)
+              .filter(
+                ({ published, category }) =>
+                  published && category === categoryQuery
+              )
               .map(({ id, category, date, title, description }) => (
                 <li key={id}>
                   <Link
