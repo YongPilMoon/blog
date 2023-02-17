@@ -18,7 +18,7 @@ function Menu({ title, category }) {
   return (
     <Link
       href={`/?category=${category}`}
-      className="text-lg font-bold text-white"
+      className="text-lg font-bold dark:text-white text-black"
     >
       {title}
     </Link>
