@@ -1,0 +1,37 @@
+---
+title: '웹성능 최적화'
+date: '2023-02-23'
+description: ''
+published: true
+---
+
+## 1. 이미지 최적화
+- 간단한 이미지는 TinyPNG 사이트에서 적용할 수 있습니다.
+- imgbot 서비스를 사용하여 자동화 가능합니다.
+- img 태그에 width, height 값을 주어 reflow를 방지할 수 있습니다.
+- img 태그의 loading 속성에 `lazy`값을 주면 lazy loading을 사용 할 수 있습니다.
+<br/>
+## 2. webpack 코드 분할
+`optimization.splitChunks` 속성을 설정하면 코드 분할을 수행할 수 있습니다.
+
+`chunks` 속성을 `all`로 설정하면 초기 진입점(Entry Point)와 동적으로 로드되는 모든 코드(node_modules)를 분할할 수 있습니다.
+우리가 작성한 코드인 main과 라이브러리 번들인 vendor를 분리하면 배포 시 라이브러리의 변경이 없다면 
+캐시 된 vendor파일을 재사용함으로 초기 로딩 시간을 줄이고 성능을 개선할 수 있습니다.
+
+<CodeBlock>
+{`
+  main.bundle.cb5a63d7fad69d6fe44f.js
+  vendors~main.bundle.cae791af346c8f8bcd28.js
+`}
+</CodeBlock>
+
+webpack5에서는 `chunk:all` 옵션이 기본값으로 설정되어있습니다.
+<br/>
+## 3. 웹팩 번들 사이즈
+webpack-bundle-analyzer를 사용하면 현재 프로젝트에 사용된 파일들의 번들 사이즈를 한눈에 확인 할 수 있습니다.
+<br/>
+## 4.애니메이션
+위치 변환 애니메이션을 구현할 경우 `absolute`보다 `transform`을 사용합니다.
+`absolute` 속성을 사용하면 해당 요소의 위치나 크기가 변경될 때, 부모 요소의 레이아웃을 다시 계산하고 다시 그리는 reflow가 발생헙나다.
+하지만 `transform` 속성은 요소를 변형시키는 것으로 해당 요소의 위치나 크기를 변경하지 않고 변형시키는 것 입니다. 따라서 reflow가 발생하지 않습니다.
+또한 대부분의 브라우저에서 `transform` 애니메이션에 대해 CPU가 아닌 GPU를 사용하여 성능을 더욱 향상시킬 수 있습니다. 
