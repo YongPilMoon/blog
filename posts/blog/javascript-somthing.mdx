@@ -1,13 +1,15 @@
 ---
 title: '자바스크립트의 주요 개념'
 date: '2023-02-23'
-description: '클로저'
+description: '클로저, this'
 published: true
 ---
 
 
 ## 목차
 - 클로저
+- this
+
 <br/>
 ## 클로저란?
 클로저란 함수와 그 함수가 선언됐을 때의 `렉시컬 환경`의 조합입니다.
@@ -55,11 +57,11 @@ published: true
     const module = (function() {
       let privateVariable = 1;
       
-      function privateFunction() {
+      function privateFunction {
         console.log(privateVariable)
       }
 
-      function publicFunction() {
+      function publicFunction {
         privateFunction()
       }
 
@@ -68,8 +70,6 @@ published: true
         publicVariable: 'Hello World'
       }
     })()
-
-    module.publicFunction() // 1
 `}
 </CodeBlock>
 <br/>
@@ -83,11 +83,54 @@ published: true
       }
    }
 
-   const addFive = makeAdd(5);
-   console.log(addFive(2)); // 7
+   const addFive = makeAdd(5)
 `}
 </CodeBlock>
 
+<br/>
+<br/>
+## this란?
+현재 실행 중인 함수가 속한 객체를 가르키는 키워드입니다. `this`는 실행 컨텍스트 내에서 동적으로 결정되며
+호출 방법에 따라 달라집니다.
+<br/>
+- 브라우저 환경의 전역 스크립트에서는 `this`는 `window` 객체를 가르킵니다.
+- 메소드내에서의 `this`는 해당 객체를 가르킵니다.
+<CodeBlock>
+{`
+   const user = {
+      name: 'nick',
+      getName: function() {
+        return this.name;
+      }
+   }
 
+   console.log(user.getName()) // nick
+`}
+</CodeBlock>
+- `this`는 현재 실행 중인 함수가 속한 객체이기 때문에 메소드를 전역변수에 할당하여 실행한다면 `this`는 window를 가르킵니다.
 
+<CodeBlock>
+{`
+   const user = {
+      name: 'nick',
+      getName: function() {
+        return this.name;
+      }
+   }
+
+   const globalFunction = user.getName;
+   console.log(globalFunction()) // undefined, this는 window
+`}
+</CodeBlock>
+- 이벤트 핸들러에서 `this`는 HTML 요소를 참조합니다. 이로 우리가 정의한 이벤트 핸들러함수가 HTML 요소 내부에서 실행된다는 것을 추측할 수 있습니다.
+
+<CodeBlock>
+{`
+  const myButton = document.getElementById('myButton');
+
+  myButton.addEventListener('click', function() {
+    console.log(this); // <button id="myButton">Click me</button>
+  });
+`}
+</CodeBlock>
 
