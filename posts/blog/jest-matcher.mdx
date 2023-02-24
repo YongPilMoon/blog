@@ -1,0 +1,233 @@
+---
+title: '[Jest] 유용한 Matchers'
+date: '2023-02-23'
+description: '유튜버 코딩악마님의 Jest강좌를 보고 정리한 글 입니다.'
+published: true
+---
+
+유튜버 코딩악마님의 [Jest강좌](https://www.youtube.com/watch?v=_36vt4fBjOQ&list=PLZKTXPmaJk8L1xCg_1cRjL5huINlP2JKt&index=2)를 보고 정리한 글 입니다.
+<br/>
+## Matcher
+테스트 코드에서 예상되는 값과 실제 값이 일치하는지 비교하는 함수
+<br/>
+
+### 1. toBe
+숫자나 문자등 기본값을 비교
+<CodeBlock>
+{`
+  test("1은 1이야.", () => {
+    expect(1).toBe(1);
+  })   
+`}
+</CodeBlock>
+<br/>
+
+### 2. toEqual
+객체나 배열같은 참조 타입의 값을 비교
+
+<CodeBlock>
+  {`
+    export const fn = {
+      makeUser: (name, age) => ({ name, age }),
+    };
+
+    // 실패
+    test("이름과 나이를 전달받아서 객체를 전달해줘", () => {
+      expect(fn.makeUser("Nick", 34)).toBe({
+        name: "Nick",
+        age: 34,
+      });
+    });
+
+    // 성공
+    test("이름과 나이를 전달받아서 객체를 전달해줘", () => {
+      expect(fn.makeUser("Nick", 34)).toEqual({
+        name: "Nick",
+        age: 34,
+      });
+    });
+`}
+</CodeBlock>
+<br/>
+
+### 3. toStrictEqual
+toStrictEqual은 객체의 `undefined` 속성, 배열의 `undefined` 요소, 객체의 타입까지 비교
+
+<CodeBlock>
+  {`
+    export const fn = {
+      makeUser: (name, age) => ({ name, age, gender: undefined }),
+    };
+
+    // 성공
+    test("이름과 나이를 전달받아서 객체를 전달해줘", () => {
+      expect(fn.makeUser("Nick", 34)).toEqual({
+        name: "Nick",
+        age: 34,
+      });
+    });
+
+    // 실패
+    test("이름과 나이를 전달받아서 객체를 전달해줘", () => {
+      expect(fn.makeUser("Nick", 34)).toStrictEqual({
+        name: "Nick",
+        age: 34,
+      });
+    });
+`}
+</CodeBlock>
+<br/>
+
+### 4. toBeNull
+null 경우 통과
+<CodeBlock>
+{`
+  // 성공
+  test("null은 null입니다.", () => {
+    expect(null).toBeNull();
+  });
+`}
+</CodeBlock>
+<br/>
+
+### 5. toBeDefined
+undefined가 아닐 경우 통과
+<CodeBlock>
+{`
+  // 실패
+  test("undefined는 defined입니다.", () => {
+    expect(undefined).toBeDefined();
+  });
+`}
+</CodeBlock>
+<br/>
+
+### 6. toBeUndefined
+undefined 일경우 통과
+<CodeBlock>
+{`
+  // 성공
+  test("undefined는 undefined입니다.", () => {
+    expect(undefined).toBeUndefined();
+  });
+`}
+</CodeBlock>
+<br/>
+
+### 7. toBeTruthy, toBeFalsy
+boolean 값을 비교
+<CodeBlock>
+{`
+  // 실패
+  test("0은 false 입니다.", () => {
+    const add = (num1, num2) => num1 + num2;
+    expect(add(1, -1)).toBeTruthly();
+  });
+
+  // 성공
+  test("0은 false 입니다.", () => {
+    const add = (num1, num2) => num1 + num2;
+    expect(add(1, -1)).toBeFalsy();
+  });
+`}
+</CodeBlock>
+<br/>
+
+### 8. toBeGreaterThan, toBeGreaterThanOrEqual
+크다, 크거나 같다
+<CodeBlock>
+{`
+  // 성공
+  test("비밀번호는 10자 이상이어야 합니다.", () => {
+    const password = "12345678910";
+    expect(password.length).toBeGreaterThanOrEqual(10);
+  });
+`}
+</CodeBlock>
+<br/>
+
+### 9. toBeLessThan, toBeLessThanOrEqual
+작다, 작거나 같다
+<CodeBlock>
+{`
+  // 실패
+  test("id는 10자 이하여야 합니다.", () => {
+    const id = "THE_BLACK_WHITE";
+    expect(id.length).toBeLessThanOrEqual(10);
+  });
+`}
+</CodeBlock>
+<br/>
+
+### 10. toBeCloseTo
+값이 근사치인지 비교
+
+(자바스크립트에서는 숫자를 부동소수점 형태로 다루어 0.1과 같은 2진수로 정확히 표현할 수 없는 수를 근사치로 표현합니다.)
+<CodeBlock>
+{`
+  // 실패
+  test("0.1 더하기 0.2는 0.3입니다", () => {
+    const add = (num1, num2) => num1 + num2;
+    expect(add(0.1,0.2)).toBeCloseTo(0.3);
+  });
+`}
+</CodeBlock>
+<br/>
+
+### 11. toMatch
+정규 표현식을 사용하여 비교
+<CodeBlock>
+{`
+  // 실패
+  test("Hello World에 a 라는 글자가 있나?", () => {
+    expect("Hello World").toMatch(/a/)
+  });
+`}
+</CodeBlock>
+<br/>
+
+### 12. toContain
+배열에서 특정요소가 있는지 확인
+<CodeBlock>
+{`
+  // 성공
+  test("유저 리스트에 Mike가 있나?", () => {
+    const user = "Mike";
+    const userList = ["Tom", "Mike", "Kai"];
+    expect(userList).toContain(user)
+  });
+`}
+</CodeBlock>
+<br/>
+
+### 13. toThrow
+에러가 발생했는지 확인
+
+<CodeBlock>
+{`
+  // 성공
+  test("이거 에러 나나요?", () => {
+    const throwErr = () => {
+      throw new Error("XX")
+    }
+    expect(() => throwErr()).toThrow()
+  });
+
+  // 특정에러인지 확인(실패)
+  test("이거 에러 나나요?", () => {
+    const throwErr = () => {
+      throw new Error("XX")
+    }
+    expect(() => throwErr()).toThrow("OO")
+  });
+
+  // 특정에러인지 확인(성공)
+  test("이거 에러 나나요?", () => {
+    const throwErr = () => {
+      throw new Error("XX")
+    }
+    expect(() => throwErr()).toThrow("XX")
+  });
+`}
+</CodeBlock>
+<br/>
