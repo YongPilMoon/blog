@@ -1,14 +1,14 @@
 import { getAllPostIds, getPostData } from '../../../lib/posts'
-import Date from '@/components/ui/Date'
+import Date from '@/features/ui/Date'
 
 import { useRouter } from 'next/router'
 import { MDXRemote } from 'next-mdx-remote'
 
-import Button from '@/components/ui/Button'
-import Image from '@/components/ui/Image'
+import Button from '@/features/ui/Button'
+import Image from '@/features/ui/Image'
 import Head from 'next/head'
 import { siteTitle } from '../../_document'
-import  CodeBlock from '@/components/ui/CodeBlock';
+import  CodeBlock from '@/features/ui/CodeBlock';
 
 export async function getStaticPaths() {
   const paths = getAllPostIds()

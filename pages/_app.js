@@ -1,7 +1,7 @@
-import Layout from '@/components/layout/Layout'
+import Layout from '@/features/layout/Layout'
 import '../styles/global.css'
 import { useRouter } from 'next/router'
-import ErrorBoundary from '@/components/ErrorBoundary'
+import ErrorBoundary from '@/features/ErrorBoundary'
 
 export default function App({ Component, pageProps }) {
   const router = useRouter()

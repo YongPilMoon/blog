@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { siteTitle } from '../pages/_document'
 import Link from 'next/link'
-import Date from '../components/ui/Date'
+import Date from '@/features/ui/Date'
 import { getSortedPostsData } from '../lib/posts'
 import { useRouter } from 'next/router'
 import { useLayoutEffect } from 'react'
@@ -39,7 +39,7 @@ export default function Home({ allPostsData }) {
                   published && category === categoryQuery
               )
               .map(({ id, category, date, title, description }) => (
-                <li key={id}>
+                <div key={id}>
                   <Link
                     href={`posts/${category}/${id}`}
                     className="text-xl font-bold"
@@ -50,7 +50,7 @@ export default function Home({ allPostsData }) {
                   <small className="text-sm text-gray-400">
                     <Date dateString={date} />
                   </small>
-                </li>
+                </div>
               ))}
           </ul>
         </div>
