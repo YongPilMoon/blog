@@ -1,0 +1,142 @@
+---
+title: 'Jest 비동기 코드 테스트'
+date: '2023-02-25'
+description: '유튜버 코딩악마님의 Jest강좌를 보고 정리한 글 입니다.'
+published: true
+---
+
+유튜버 코딩악마님의 [Jest강좌](https://www.youtube.com/watch?v=snFRUjYR6j4&list=PLZKTXPmaJk8L1xCg_1cRjL5huINlP2JKt&index=3)를 보고 정리한 글 입니다.
+<br/>
+
+## callback 함수 
+callback 함수를 테스트하기 위해선 `done` 함수를 인자로 받아 호출해 주어야 합니다.
+`done`은 테스트를 수행하는 함수의 인자로 비동기 코드가 완료되었음을 알리는 데 사용됩니다.
+Jest는 `done`이 호출될 때까지 테스트를 끝내지 않고 기다립니다. 만약 `done`이 호출되지 않으면 테스트가 실패한 것으로 간주합니다.
+
+
+<CodeBlock>
+{`
+   //fn.js
+  const fn = {
+    getName: (callback) => {
+      const name = "Mike";
+      setTimeout(() => {
+        callback(name);
+      }, 3000);
+    }
+  };
+
+  module.exports = fn;
+`}
+</CodeBlock>
+<br/>
+<CodeBlock>
+{`
+  const fn = require("./fn");
+
+  // 성공
+  test("3초 후에 받아온 이름은 Mike", (done) => {
+    function callback(name) {
+      expect(name).toBe("Mike");
+      done();
+    }
+
+    fn.getName(callback);
+  });
+`}
+</CodeBlock>
+<br/>
+## Promise
+Promise를 사용하면 done을 사용하지 않고 비동기 테스트를 할 수 있습니다. 대신 `return`문을 사용해야
+Jest가 프로미스가 완료될때까지 기다립니다. 
+<CodeBlock>
+{`
+   //fn.js
+  const fn = {
+     getAge: () => {
+      const age = 30;
+      return new Promise((res, rej) => {
+        setTimeout(() => {
+          res(age);
+        }, 3000);
+      })
+    }
+  };
+
+  module.exports = fn;
+`}
+</CodeBlock>
+<br/>
+<CodeBlock>
+{`
+  const fn = require("./fn");
+
+  // 실패
+  test("3초 후에 받아온 나이는 30", () => {
+    return fn.getAge().then(age => {
+      expect(age).toBe(31);
+    })
+  });
+`}
+</CodeBlock>
+### resolve Matcher
+resolves Matcher를 사용하면 보다 간단하게 Promise를 테스트 할 수 있습니다.
+<CodeBlock>
+{`
+  const fn = require("./fn");
+
+  // 성공
+  test("3초 후에 받아온 나이는 30", () => {
+    return expect(fn.getAge()).resolves.toBe(30);
+  });
+`}
+</CodeBlock>
+### rejects Matcher
+rejects 상황을 테스트 할 수 있습니다.
+
+<CodeBlock>
+{`
+   //fn.js
+  const fn = {
+     getAge: () => {
+      const age = 30;
+      return new Promise((res, rej) => {
+        setTimeout(() => {
+          rej('error');
+        }, 3000);
+      })
+    }
+  };
+
+  module.exports = fn;
+`}
+</CodeBlock>
+<br/>
+<CodeBlock>
+{`
+  const fn = require("./fn");
+
+  // 성공
+   test("3초 후에 에러가 납니다.", () => {
+    return expect(fn.getAge()).rejects.toMatch('error');
+  });
+`}
+</CodeBlock>
+
+## async/await
+<CodeBlock>
+{`
+  const fn = require("./fn");
+
+  // 성공
+  test("3초 후에 받아온 나이는 30", async () => {
+    const age = await fn.getAge();
+    expect(age).toBe(30);
+  });
+
+  // 성공
+  test("3초 후에 받아온 나이는 30", async () => {
+    await expect(fn.getAge()).resolves.toBe(30);
+  });
+`}
+</CodeBlock>
