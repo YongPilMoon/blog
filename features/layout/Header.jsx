@@ -7,19 +7,16 @@ const name = 'HELLO WORLD'
 const menus = [
   {
     title: 'BLOG',
-    category: 'blog',
+    path: '/',
   },
   {
     title: '알고리즘',
-    category: 'algorithm',
+    path: '/algorithm',
   },
 ]
-function Menu({ title, category }) {
+function Menu({ title, path }) {
   return (
-    <Link
-      href={`/?category=${category}`}
-      className="text-lg font-bold dark:text-white text-black"
-    >
+    <Link href={path} className="text-lg font-bold dark:text-white text-black">
       {title}
     </Link>
   )
@@ -31,8 +28,8 @@ function Header({ home }) {
       <div className="p-4 mb-6">
         <div className="flex items-center justify-between">
           <nav className="grid grid-flow-col gap-4">
-            {menus.map(({ title, category }) => (
-              <Menu key={title} title={title} category={category} />
+            {menus.map(({ title, path }) => (
+              <Menu key={title} title={title} path={path} />
             ))}
           </nav>
           <NoSSR>

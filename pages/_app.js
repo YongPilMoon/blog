@@ -7,7 +7,7 @@ export default function App({ Component, pageProps }) {
   const router = useRouter()
 
   return (
-    <Layout home={router.pathname === '/'}>
+    <Layout home={router.pathname === '/' || router.pathname === '/algorithm'}>
       <ErrorBoundary>
         <Component {...pageProps} pathname={router.pathname} />
       </ErrorBoundary>

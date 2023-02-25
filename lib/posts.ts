@@ -1,24 +1,34 @@
 import { readdirSync, readFileSync } from 'fs'
 
-import matter from 'gray-matter'
+import matter, { GrayMatterFile } from 'gray-matter'
 import { serialize } from 'next-mdx-remote/serialize'
 
-type PostPath = 'blog' | 'algorithm'
+export type PostCategory = 'blog' | 'algorithm'
 
-export function getSortedPostList(postPath: PostPath) {
-  const fileNames = readdirSync(`posts/${postPath}`)
+export type PostListItem = {
+  id: string
+  date: string
+  title: string
+  description: string
+  published: boolean
+}
+
+export function getSortedPostList(postCategory: PostCategory) {
+  const fileNames = readdirSync(`posts/${postCategory}`)
 
   const allPostsData = fileNames.map((fileName: string) => {
-    const fileContents = readFileSync(`posts/${postPath}/${fileName}`, 'utf8')
-    const matterResult = matter(fileContents)
+    const fileContents = readFileSync(
+      `posts/${postCategory}/${fileName}`,
+      'utf8'
+    )
+    const matterResult = matter(fileContents) as GrayMatterFile<string>
 
     return {
       id: fileName.replace(/\.md$|\.mdx$/, ''),
       ...matterResult.data,
     }
-  })
+  }) as PostListItem[]
 
-  // @ts-ignore
   return allPostsData.sort(({ date: a }, { date: b }) => {
     if (a < b) {
       return 1
@@ -30,8 +40,18 @@ export function getSortedPostList(postPath: PostPath) {
   })
 }
 
-export function getAllPostIds(postPath: PostPath) {
-  const fileNames = readdirSync(`posts/${postPath}`)
+const getAllFile = () => {
+  const categories = readdirSync(`posts/`)
+  return categories.map((category) => ({
+    fileNames: readdirSync(`posts/${category}`),
+    category,
+  }))
+}
+
+export function getAllPostIds() {
+  const fileNames = getAllFile()
+    .map(({ fileNames }) => fileNames)
+    .flat()
 
   return fileNames.map((fileName) => {
     return {
@@ -42,8 +62,18 @@ export function getAllPostIds(postPath: PostPath) {
   })
 }
 
-export async function getPostData(id, category) {
-  const fullPath = `posts/${category}/${id}.mdx`
+export async function getPostData(id: string) {
+  const files = getAllFile()
+
+  let postCategory = ''
+  files.forEach(({ fileNames, category }) => {
+    console.log(fileNames)
+    if (fileNames.includes(`${id}.mdx`)) {
+      postCategory = category
+    }
+  })
+
+  const fullPath = `posts/${postCategory}/${id}.mdx`
   const fileContents = readFileSync(fullPath, 'utf8')
   const matterResult = matter(fileContents)
   const mdxSource = await serialize(matterResult.content)

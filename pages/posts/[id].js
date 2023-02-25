@@ -1,4 +1,4 @@
-import { getAllPostIds, getPostData } from '../../../lib/posts'
+import { getAllPostIds, getPostData } from '../../lib/posts'
 import Date from '@/features/ui/Date'
 
 import { useRouter } from 'next/router'
@@ -7,7 +7,7 @@ import { MDXRemote } from 'next-mdx-remote'
 import Button from '@/features/ui/Button'
 import Image from '@/features/ui/Image'
 import Head from 'next/head'
-import { siteTitle } from '../../_document'
+import { siteTitle } from '../_document'
 import  CodeBlock from '@/features/ui/CodeBlock';
 
 export async function getStaticPaths() {
@@ -19,7 +19,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const postData = await getPostData(params.id, params.category)
+  const postData = await getPostData(params.id)
   return {
     props: {
       postData,
