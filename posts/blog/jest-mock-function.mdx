@@ -1,0 +1,161 @@
+---
+title: 'Jest 목  함수(Mock Function)'
+date: '2023-03-01'
+description: '유튜버 코딩악마님의 Jest강좌를 보고 정리한 글 입니다.'
+published: true
+---
+
+유튜버 코딩악마님의 [Jest강좌](https://www.youtube.com/watch?v=9xBjErtlr1o&list=PLZKTXPmaJk8L1xCg_1cRjL5huINlP2JKt&index=5)를 보고 정리한 글 입니다.
+<br/>
+
+## mock.calls 
+`mock.calls` 프로퍼티를 통해 목함수가 호출 횟수와 파라미터에 대한 정보를 얻을 수 있습니다.
+
+<CodeBlock>
+{`
+   const mockFn = jest.fn();
+
+   mockFn();
+   mockFn(1);
+
+   console.log(mockFn.mock.calls) // [ [], [1] ]
+
+   test("함수는 2번 호출됩니다.", () => {
+    expect(mockFn.mock.calls.length).toBe(2);
+  });
+
+  test("2번째로 호출된 함수에 전달된 첫번째 인수는 1입니다.", () => {
+    expect(mockFn.mock.calls[1][0]).toBe(1);
+  });
+`}
+</CodeBlock>
+<br/>
+
+## mock.results
+`mock.results` 프로퍼티를 통해 반환된 값을 알 수 있습니다.
+<CodeBlock>
+{`
+  const mockFn = jest.fn((num) => num + 1);
+
+  mockFn(10);
+  mockFn(20);
+  mockFn(30);
+
+  console.log(mockFn.mock.results);
+  /**
+  *  [
+  *    { type: 'return', value: 11 },
+  *    { type: 'return', value: 21 },
+  *    { type: 'return', value: 31 }
+  *  ]
+  **/
+
+  test("10에서 1 증가한 값이 반환된다", () => {
+    expect(mockFn.mock.results[0].value).toBe(11);
+  });
+
+  test("20에서 1 증가한 값이 반환된다", () => {
+    expect(mockFn.mock.results[0].value).toBe(21);
+  });
+
+  test("30에서 1 증가한 값이 반환된다", () => {
+    expect(mockFn.mock.results[0].value).toBe(31);
+  });
+
+`}
+</CodeBlock>
+<br/>
+
+## mockReturnValue, mockReturnValueOnce
+목 함수 호출 시 반환될 결괏값을 지정하는 함수, `mockReturnValueOnce`는 한 번의 결괏값만 지정함으로써 각 호출마다 다른 값을 반환하도록
+설정할 수 있습니다.
+
+<CodeBlock>
+{`
+  const mockFn = jest.fn((num) => num + 1);
+
+mockFn
+  .mockReturnValueOnce(true)
+  .mockReturnValueOnce(false)
+  .mockReturnValueOnce(true)
+  .mockReturnValueOnce(false)
+  .mockReturnValue(true);
+
+const result = [1, 2, 3, 4, 5].filter((num) => mockFn(num));
+
+test("홀수는 1,3,5", () => {
+  expect(result).toStrictEqual([1, 3, 5]);
+});
+`}
+</CodeBlock>
+<br/>
+
+## 모듈 모킹
+`jest.mock` 함수를 사용하면 모듈이 제공하는 함수나 변수를 가로채고, 목 함수나 변수를 사용하여 테스트 할 수 있습니다.
+
+<CodeBlock>
+{`
+const fn = {
+  createUser: (name) => {
+    console.log("실제로 사용자가 생성되었습니다.");
+    return { name };
+  },
+};
+
+module.exports = fn;
+`}
+</CodeBlock>
+<br/>
+
+<CodeBlock>
+{`
+const fn = require("./fn");
+
+jest.mock("./fn");
+
+fn.createUser.mockReturnValue({ name: "Mike" });
+
+test("유저를 만든다", () => {
+  const user = fn.createUser("Mike");
+  expect(user.name).toBe("Mike");
+});
+
+`}
+</CodeBlock>
+`jest.mock`을 사용하여 실제 `createUser`가 호출되지 않게 하였습니다. 테스트 결과가 실제 DB에 적용되지 않는 걸 원할 경우 유용하게 사용할 수 있습니다.
+<br/>
+
+## toBeCalled, toBeCalledTime, toBecalledWith, lastCalledWith
+- toBeCalled: 한 번이라도 호출되면 통과
+- toBeCalledTime: 정확한 호출 횟수 체크
+- toBecalledWith: 인수로 어떤 값을 받았는지 체크
+- lastCalledWith: 마지막 인수로 어떤 값을 받았는지 체크
+
+
+<CodeBlock>
+{`
+const mockFn = jest.fn();
+
+mockFn(10, 20);
+mockFn();
+mockFn(30, 40);
+
+test("한번 이상 호출?", () => {
+  expect(mockFn).toBeCalled();
+});
+
+test("정확히 세번 호출?", () => {
+  expect(mockFn).toBeCalledTimes(3);
+});
+
+test("10이랑 20 전달받은 함수가 있는가?", () => {
+  expect(mockFn).toBeCalledWith(10, 20);
+});
+
+test("마지막 함수는 30이랑 40 받았음?", () => {
+  expect(mockFn).lastCalledWith(30, 40);
+});
+
+
+`}
+</CodeBlock>
