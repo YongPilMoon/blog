@@ -1,33 +1,14 @@
 ---
 title: 'React Rendering'
 date: '2022-12-12'
-description: '리액트 렌더링과정을 알아보았습니다.'
+description: 'React Render Cycle, Fiber and Keys'
 published:  true
 ---
 
-리액트의 렌더링 과정은 `Virtual Dom`을 조작하는 `Render Phase` 단계와 생성된 `Virtaul Dom`을 실제 Dom에 적용시키는 `Commit Phase` 단계로 나뉩니다.
+## 목차
+- React Render Cycle
 
-<br/>
+## React Render Cycle
+<img src="/images/react-render.png" />
 
-## 처음 렌더링 되는 경우(Initial Render)
-<br/>
-### Render Phase 
-- 렌더링은 컴포넌트 트리를 따라 `Root` 컴포넌트에서부터 하위 컴포넌트 순으로 진행됩니다.
-- 각 컴포넌트는 `createElement` 함수를 호출하고 `React Element`를 리턴합니다.
-- `React Element`는 컴포넌트의 정보를 담고 있는 **자바스크립트 객체**입니다.
-- 트리의 모든 컴포넌트들의 Element가 만들어지면 `Commit Phase`로 넘어갑니다.
-<br/>
-### Commit Phase 
-생성된 `React Elements`를 `ReactDom`패키지를 사용하여 `Dom`에 적용합니다.
-<br/>
-## 변경사항에 의해 다시 렌더링 되는 경우(Re-render)
-<br/>
-### Render Phase 
-- `setStatus` 혹은 `useReducer`의 `dispatch`를 호출하는 업데이트가 필요한 컴포넌트를 모두 찾습니다.
-- 업데이트가 필요한 컴포넌트들을 `React elements`로 변경하고 저장합니다.
-- 이전 `React elements Tree(Virtual DOM)`와 새로운 `React elements Tree`를 비교하는 reconciliation을 수행합니다.
-- 변경이 필요한 Element들을 Commit phase로 넘깁니다.
-<br/>
-### Commit Phase 
-변경사항들이 `Dom`에 적용합니다.
-<br/>
+

@@ -149,13 +149,18 @@ counter = React.render(Counter) // 1
 </CodeBlock>
 <br />
 
-`value`를 `useState`가 아닌 `useState`의 상위 스코프에서 선언 함으로써 `useState`함수 실행이 종료돼도
-`value`값을 저장할 수 있게 변경되었습니다. 또한 React와 `setCount` 함수 수행 후 `render`함수를 수행해 주므로써
+`value`를 `useState`가 아닌 `useState`의 상위 스코프에서 선언함으로써 `useState`함수 실행이 종료돼도
+`value`값을 저장할 수 있게 변경되었습니다. 또한 React와 `setCount` 함수 수행 후 `render`함수를 수행해 줌으로써
 업데이트된 `value`값을 `count`에 반환할 수 있게 되었습니다.
 <br/>
+## 결론
+React 컴포넌트는 함수이고 상태가 변경될 때마다 함수가 다시 실행되는데 어떻게 state 값을 유지할까라는 의문점을 해결할 수 있었습니다.
+=> useState의 상위 스코프에서 값을 정의하고 있어 리렌더로인해 useState가 다시 호출되어도 변경된 값을 유지할 수 있었습니다.  
+
+<br/>
+
 이번 글에서 `useState`의 사용법과 직접 `useState`를 구현해 봄으로써 동작원리를 이해해 보았습니다.
-작성된 `useState`코드는 [swyx 님의 글](https://www.netlify.com/blog/2019/03/11/deep-dive-how-do-react-hooks-really-work/)을 참조하였습니다. `useState`외에 다른 훅을 구현한 코드도 있으니
-살펴보면 hook을 이해하는데 도움이 될 것 같습니다.
+작성된 `useState`코드는 [swyx 님의 글](https://www.netlify.com/blog/2019/03/11/deep-dive-how-do-react-hooks-really-work/)을 참조하였습니다. 
 <br/>
 ## Reference
 - [deep-dive-how-do-react-hooks-really-work](https://www.netlify.com/blog/2019/03/11/deep-dive-how-do-react-hooks-really-work/)
