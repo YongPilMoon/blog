@@ -3,19 +3,19 @@ import Head from 'next/head'
 import React from 'react'
 import { siteTitle } from './_document'
 import { getSortedPostList } from '../lib/posts'
-import { PostList } from '@/features/post/PostList'
+import { PostList } from '@/app/blog/features/post/PostList'
 
 export function getStaticProps() {
-  const algorithmPost = getSortedPostList('algorithm')
+  const blogPostList = getSortedPostList('blog')
   return {
     props: {
-      algorithmPost,
+      blogPostList,
     },
   }
 }
 
-export default function Algorithm({
-  algorithmPost,
+export default function Home({
+  blogPostList,
 }: InferGetServerSidePropsType<typeof getStaticProps>) {
   return (
     <>
@@ -24,7 +24,7 @@ export default function Algorithm({
       </Head>
       <section>
         <div className="grid gap-4">
-          <PostList path="blog" postList={algorithmPost} />
+          <PostList path="blog" postList={blogPostList} />
         </div>
       </section>
     </>

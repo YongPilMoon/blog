@@ -1,0 +1,24 @@
+---
+title: 'Monorepo'
+date: '2023-03-07'
+description: ''
+published: true
+---
+
+여러 서비스를 하나의 git repository에서 관리
+
+## 장점
+- 관리가 편리하다.
+
+## 주의점
+-  dependency 중복
+
+## yarn workspace 
+
+<CodeBlock>
+{`
+  "workspaces": [
+    "packages/*"
+  ],
+`}
+</CodeBlock>
