@@ -1,5 +1,6 @@
 {
   "name": "yongpil",
+  "private": true,
   "version": "1.0.0",
   "author": "yongpilmoon <m71661@gmail.com>",
   "license": "MIT",
