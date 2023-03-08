@@ -1,4 +1,4 @@
-import { a11yDark } from 'react-syntax-highlighter/dist/cjs/styles/prism/'
+import { a11yDark } from 'react-syntax-highlighter/dist/cjs/styles/prism'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 
 function CodeBlock({ children }) {
