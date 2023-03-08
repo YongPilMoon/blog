@@ -3,7 +3,7 @@ import Head from 'next/head'
 import React from 'react'
 import { siteTitle } from './_document'
 import { getSortedPostList } from '../lib/posts'
-import { PostList } from '@/app/blog/features/post/PostList'
+import { PostList } from '@/features/post/PostList'
 
 export function getStaticProps() {
   const blogPostList = getSortedPostList('blog')
