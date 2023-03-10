@@ -2,6 +2,7 @@ import { PostListItem, PostCategory } from '@/lib/posts'
 import Link from 'next/link'
 import Date from '@/features/ui/Date'
 import { css } from '@emotion/react'
+import { Text } from 'ui'
 
 type PostListProps = {
   path: PostCategory
@@ -23,7 +24,9 @@ export function PostList({ postList }: PostListProps) {
         .map(({ id, date, title, description }) => (
           <div key={id}>
             <Link href={`posts/${id}`}>
-              <div css={titleStyle}>{title}</div>
+              <Text typography="subtitle1" customCSS={titleStyle}>
+                {title}
+              </Text>
             </Link>
             <div>{description}</div>
             <small className="text-sm text-gray-400">

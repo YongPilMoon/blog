@@ -2,31 +2,87 @@
 title: 'Monorepo'
 date: '2023-03-07'
 description: ''
-published: false
+published: true
 ---
 
-여러 서비스를 하나의 git repository에서 관리
-
+여러 서비스를 하나의 git 레파지토리에서 관리
+<br/>
 ## 장점
-- 여러서비스의 공통된 패키지 버전을 한곳에 관리할 수 있음
+- 간단하게 코드를 공유할 수 있음
+- 여러서비스의 공통된 패키지 버전을 한곳에서 관리할 수 있음
 - lint, ts-config 등 공통 설정을 한 곳에서 관리할 수 있음
 - 여러 서비스의 공통 수정 사항을 한 컷밋으로 작성할 수 있음
-
-## 주의점
-
-- dependency 중복
+<br/>
 
 ## yarn workspace
-
-
-root workspace 설정
+<br/>
+### root workspace 설정
 <CodeBlock>
   {`
+  //  package.json
   "workspaces": [
+    "apps/*",
     "packages/*"
   ],
 `}
 </CodeBlock>
+패키지 경로를 root workspace에 명시하면 각 패키지가 모듈로 인식되고 Hoisting 되어 설치 시 최상단 node_modules에서 사용할 수 있습니다.
+<br/>
+### service workspace 설정
+<CodeBlock>
+  {`
+  //  package.json
+   "name": "blog",
+   "dependencies": {
+      "ui": "*"
+    }
+  `}
+</CodeBlock>
+<CodeBlock>
+  {`
+  //  tsconfig.json
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "extends": "../../tsconfig.json"
+  `}
+</CodeBlock>
+root workspace에서 공통 tsconfig를 설정하고 각 서비스에서 확장하여 사용할 수 있습니다.
+<br/>
+### ui workspace 설정
+<CodeBlock>
+  {`
+  //  package.json
+  "name": "ui",
+  "main": "index.js",
+  "dependencies": {
+    "react": "^18.2.0"
+  }
+  `}
+</CodeBlock>
+import된 ui 코드는 각 서비스에서 트렌스파일 되기 때문에 별도 번들러 없이 react만 설치 
+<br/>
 
-root workspace 패키지 설치
+### next.js v13 사용시
+
+<CodeBlock>
+{`
+  //  next.config.js
+  module.exports = {
+    transpilePackages: ['ui'],
+  }
+`}
+</CodeBlock>
+- next.js v13에서 로컬 패키지를 트렌스파일하기 위해 설정
+- v12에서는 `next-transpile-modules` 라이브러리를 사용하였는데 deprecated됨
+<br/>
+### root workspace 패키지 설치
 `yarn add -W @emotion/react`
+<br/>
+### workspace 패키지 설치
+`yarn add apps/blog -D next-transpile-modules`
+
+

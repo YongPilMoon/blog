@@ -5,7 +5,8 @@
   "author": "yongpilmoon <m71661@gmail.com>",
   "license": "MIT",
   "workspaces": [
-    "apps/*"
+    "apps/*",
+    "packages/*"
   ],
   "dependencies": {
     "@emotion/react": "^11.10.6"
