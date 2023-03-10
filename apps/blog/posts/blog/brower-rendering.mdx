@@ -53,7 +53,7 @@ DOM 트리는 HTML 문서의 각 요소(Element), 속성(Attribute), 텍스트(�
 - Dom을 batch 업데이트합니다.
 - window reize event에 debouce를 적용합니다.
 ...
-
+<br/>
 ## Layout Trashing
 <CodeBlock>
 {`
@@ -77,11 +77,12 @@ DOM 트리는 HTML 문서의 각 요소(Element), 속성(Attribute), 텍스트(�
     })
 `}
 </CodeBlock>
-
-## update Layer Tree
-
-Paint Layer 
-Graphics Layer
+<br/>
 ## Painting
 - opacity 혹은 transform을 제외한 모든 css 수정은 paint를 일으킵니다.
-- color변경 처럼 요소의 기하학적 변경이 없으면 layout은 발생하지 않습니다.
+- color변경 처럼 스타일 변화만 있을 시에는 layout은 발생하지 않습니다.
+<br/>
+## Layer
+- 최신 브라우저는 렌더링 최적화를 위해 특정 조건에서 레이어를 만듭니다. (root 레이어, position fixed, transform, overflow...)
+- 레이어는 `Render Layer`와 `Graphic Layer`로 나뉩니다.
+- 애니메이션 구현시 `translate3d`, `will-change`와 같은 속성을 사용하면 요소를 `Graphic Layer`로 분리하여 성능 향상을 꽤 할 수 있습니다.

@@ -67,7 +67,6 @@ export async function getPostData(id: string) {
 
   let postCategory = ''
   files.forEach(({ fileNames, category }) => {
-    console.log(fileNames)
     if (fileNames.includes(`${id}.mdx`)) {
       postCategory = category
     }
