@@ -2,6 +2,7 @@ import Darkmode from './Darkmode'
 import Link from 'next/link'
 import NoSSR from './NoSSR'
 import Image from 'next/image'
+import { css } from '@emotion/react'
 
 const name = 'HELLO WORLD'
 const menus = [
@@ -14,10 +15,20 @@ const menus = [
     path: '/algorithm',
   },
 ]
+
+const menuStyle = css`
+  cursor: pointer;
+`
+
 function Menu({ title, path }) {
   return (
-    <Link href={path} className="text-lg font-bold dark:text-white text-black">
-      {title}
+    <Link href={path}>
+      <span
+        className="text-lg font-bold dark:text-white text-black"
+        css={menuStyle}
+      >
+        {title}
+      </span>
     </Link>
   )
 }

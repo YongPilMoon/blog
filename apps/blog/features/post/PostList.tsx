@@ -1,22 +1,29 @@
-import React from 'react'
 import { PostListItem, PostCategory } from '@/lib/posts'
 import Link from 'next/link'
 import Date from '@/features/ui/Date'
+import { css } from '@emotion/react'
 
 type PostListProps = {
   path: PostCategory
   postList: PostListItem[]
 }
 
-export function PostList({ path, postList }: PostListProps) {
+const titleStyle = css`
+  color: rgb(37, 99, 235);
+  font-size: 20px;
+  cursor: pointer;
+  font-weight: bold;
+`
+
+export function PostList({ postList }: PostListProps) {
   return (
     <>
       {postList
         .filter(({ published }) => published)
         .map(({ id, date, title, description }) => (
           <div key={id}>
-            <Link href={`posts/${id}`} className="text-xl font-bold">
-              {title}
+            <Link href={`posts/${id}`}>
+              <div css={titleStyle}>{title}</div>
             </Link>
             <div>{description}</div>
             <small className="text-sm text-gray-400">

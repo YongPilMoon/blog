@@ -6,5 +6,8 @@
   "license": "MIT",
   "workspaces": [
     "apps/*"
-  ]
+  ],
+  "dependencies": {
+    "@emotion/react": "^11.10.6"
+  }
 }

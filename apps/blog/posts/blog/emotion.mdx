@@ -1,0 +1,27 @@
+---
+title: 'next.js emotion 세팅'
+date: '2022-03-10'
+description: ''
+published: true
+---
+
+## 1. 설치
+`yarn add @emoton/react`
+<br/>
+## 2. tsconfig 설정
+`"jsxImportSource": "@emotion/react"`
+<br/>
+babel이 jsx 코드 변환시 react의 `jsx()`가 아닌 @emotion/react의 `jsx()`를 사용하게 한다.
+<br/>
+## 3.ESlint
+`"react/no-unknown-property": ["error", { "ignore": ["css"] }]`
+<br/>
+
+ESlint에서 `plugin:react/recommended`을 사용하고 있다면 "css"는 린트 입장에서 알 수 없는 속성이기 때문에 Unknown property 'css' found eslint(react/no-unknown-property) 에러가 발생할 수 있다.
+ESlint rules에서 react/no-unknown-property ignore 옵션에 "css" 을 설정해 주면 해결할 수 있다.
+
+
+
+
+
+

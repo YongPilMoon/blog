@@ -17,6 +17,7 @@
   },
   "plugins": ["react", "tailwindcss", "@typescript-eslint"],
   "rules": {
+    "react/no-unknown-property": ["error", { "ignore": ["css"] }],
     "react/prop-types": 0,
     "react/react-in-jsx-scope": 0
   }

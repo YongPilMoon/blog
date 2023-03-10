@@ -8,8 +8,9 @@ published: false
 여러 서비스를 하나의 git repository에서 관리
 
 ## 장점
-
-- 관리가 편리하다.
+- 여러서비스의 공통된 패키지 버전을 한곳에 관리할 수 있음
+- lint, ts-config 등 공통 설정을 한 곳에서 관리할 수 있음
+- 여러 서비스의 공통 수정 사항을 한 컷밋으로 작성할 수 있음
 
 ## 주의점
 
@@ -17,6 +18,8 @@ published: false
 
 ## yarn workspace
 
+
+root workspace 설정
 <CodeBlock>
   {`
   "workspaces": [
@@ -24,3 +27,6 @@ published: false
   ],
 `}
 </CodeBlock>
+
+root workspace 패키지 설치
+`yarn add -W @emotion/react`
