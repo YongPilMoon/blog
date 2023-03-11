@@ -26,7 +26,6 @@ published: true
 </CodeBlock>
 
 webpack5에서는 `chunk:all` 옵션이 기본값으로 설정되어있습니다.
-<>
 - async: 동적 import 패키지 별도 번들로 분리
 - initial: 정적 import 패키지 별도 번들로 분리
 - all: 모든 패키지 별도 번들로 분리
@@ -38,5 +37,5 @@ webpack-bundle-analyzer를 사용하면 현재 프로젝트에 사용된 파일�
 ## 4.애니메이션
 위치 변환 애니메이션을 구현할 경우 `left`, `top`같은 속성으로 위치를 변경하지 말고 `translate`를 사용합니다.
 위치를 직접적으로 변경하면 해당 요소의 위치나 크기가 변경될 때, 부모 요소의 레이아웃을 다시 계산하고 다시 그리는 reflow가 발생헙나다.
-반면 `translate`를 사용하면 해당 요소가 별도의 layer로 옮겨지고 reflow가 발생하지 않습니다.
+반면 `translate`를 사용하면 해당 요소가 별도의 레이어로 옮겨지고 이동하게 됨으로 root 레이어에 영향을 미치지 않아 reflow가 발생하지 않습니다.
 또한 대부분의 브라우저에서 `translate` 애니메이션에 대해 CPU가 아닌 GPU를 사용하여 성능을 더욱 향상시킬 수 있습니다. 
