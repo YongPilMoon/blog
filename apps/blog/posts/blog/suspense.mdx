@@ -1,0 +1,52 @@
+---
+title: 'Suspense'
+date: '2022-03-11'
+description: ''
+published: true
+---
+
+## Suspense?
+- 자식 컴포넌트들이 로드되는 동안 fallback 컴포넌트를 보여주기 위해 사용
+- 여기서 말하는 자식 컴포넌트들이 로드되는 경우는 데이터 패칭과 lazy를 사용한 dynamic import 경우를 일컫는다.
+<br/>
+## 데이터 패치
+`useEffect`나 이벤트 핸들러에서 데이터를 패치한다고 Suspense가 동작하지는 않는다.
+리엑트에서 정해 놓은 형식에 맞춰 Promise를 throw 해야 하는데 Suspense를 지원하는 라이브러리(react-query, next.js)를 사용하면 
+이를 직접 구현하지 않고 사용할 수 있다. 
+<br/>
+### Suspense의 자식 컴포넌트들은 한번에 그려진다
+기본적으로 Suspense의 자식 컴포넌트들은 한개의 단위로 동작한다. 자식 컴포넌트중 한개만 데이터 패칭을 기다리고 있는 중이라도
+fallback이 보여지며 모든 자식컴포넌트 로드가 완료되어야 보여진다.
+<br />
+<CodeBlock>
+  {`
+  <Suspense fallback={<Loading />}>
+    <Biography />
+    <Panel>
+      <Albums />
+    </Panel>
+  </Suspense>
+`}
+</CodeBlock>
+<br/>
+### 중첩된 Suspense
+컴포넌트 로딩이 지연되는 될때는 가장 가까운 부모 Suspense fallback을 보여준다.
+<CodeBlock>
+{`
+  <Suspense fallback={<BigSpinner />}>
+    <Biography />
+    <Suspense fallback={<AlbumsGlimmer />}>
+      <Panel>
+        <Albums />
+      </Panel>
+    </Suspense>
+  </Suspense>
+`}
+</CodeBlock>
+1. Biography가 로드되는 동안은 전체가 BigSpinner로 보여진다.
+2. Biography가 로드되면 BigSpinner가 자식 컴포넌트들로 대채된다.
+3. Albums이 로드되지 않았다면 Panel 영역에 AlbumsGlimmer가 보여진다.
+4. Albums이 로드되면 AlbumsGlimmer가 자식 컴포넌트들로 대체된다.
+<br/>
+Biography, Albums의 데이터 패칭은 병렬로 이루어진다.
+
