@@ -5,7 +5,6 @@ function CodeBlock({ children }) {
   return (
     <div className="relative">
       <SyntaxHighlighter
-        showLineNumbers
         style={a11yDark}
         language="javascript"
         customStyle={{ fontSize: '1em' }}

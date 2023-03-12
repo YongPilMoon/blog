@@ -1,14 +1,109 @@
 ---
-title: 'react query'
+title: 'react-query'
 date: '2023-02-23'
-description: '클로저, this'
-published: false
+description: 'isLoading, isFetching'
+published: true
 ---
 
-## 목차
+## isLoading vs isFetching
+- isFetching: 실제 네크워크 요청이 이뤄지고 있다면 `true`
+- isLoading: 아무 데이터가 없는 상태에서 데이터를 가져오고 있다면 `true`, 캐시된 데이터가 있을 경우 `false`
+- useInfiniteQuery로 무한 스크롤을 구현하는 경우 첫 페이지 로더만 보여주려면 `isLoading`, 각 페이지 패치시마다 보여주려면 `isFetching`을 사용
+- [enabled 옵션이 `false`일 경우 isLaoding = `true`?](https://github.com/TanStack/query/issues/3584)  => enabled 옵션인 false인 상태에서 isLoading은 `true`일 수 있다.
+- isLaoding은 데이터의 존재 여부가 기준이 된다. enabled: false라도 데이터가 존재하지 않으면 true이다.
 
-- isLoading vs isFetching
-- enabled = false, isLaoding = true ??(https://github.com/TanStack/query/issues/3584)
+<br/>
+## status
+- isLoading or status === 'loading' - 데이터 없음
+- isError or status === 'error' - 에러발생
+- isSuccess or status === 'success' - 성공
+<br/>
+## FetchStatus
+query는 데이터 요청 상태인 `status` 이외에도 `fetchStatus`를 별도로 반환한다.
 
-isFetching은 실제 네크워크로 데이터 요청이 이루어지고 있는지를 판단
-isLoading은 캐시 포함 데이터가 없을 때 true 데이터가 있을 때 false이다.
+- fetchStatus === `fetching` - 패치 중
+- fetchStatus === `paused` - 패치을 하고 싶지만 정지됨
+- fetchStatus === `idle` - 아무것도 하고 있지 않은 상태
+<br/>
+## 왜 두개의 상태가 필요한가?
+background refetch와 stale-while-revaildate 로직을 `status`와 `fetchStatus`의 조합으로 만들 수 있다.
+- 데이터 패치가 완료됐을 때 일반적으로 `status: succcess`, `fetchStatus: idle`이지만 background refetch 중이라면 `fetchStatus: fetching`이다.
+- 컴포넌트가 mount되면 일반적으로 `status: loading`, `fetchStatus: fetching`이겠지만 인터넷 연결이 없다면 `fetchStatus: paused` 이다.
+- `status`는 데이터 존재여부를 나타내고 `fetchStatus`는 패치 여부를 나타낸다.
+<br/>
+## cache 라이프 사이클
+fresh -> stale -> inactive
+
+- fresh: 캐시가 신선한 상태, fresh한 캐시가 있으면 데이터 패치 시 캐시로 부터 가져온다.
+- stale: 신선하지 않은 상태, stale상태에서 패치가 발생하면 먼저 캐시에 있는 데이터를 보여준 후
+ background에서 데이터 패치가 호출되고 패치가 완료되면 보여주고 있던 데이터와 교체한다.
+- inactive: 데이터가 사용되지 않는 상태, cache Time이 지나면 삭제된다. 컴포넌트가 unmount되면 캐시 상태가 inactive로 변경된다.
+<br/>
+## next.js SSR
+<br/>
+### 1. `prefetch`로 서버에서 데이터를 패치한다.
+<br/>
+### 2. queryClient를 dehydrate해서 `dehydratedState` props로 넘겨준다.
+dehydrate는 hydrate의 반대 개념으로 queryClinet를 단순한 js 객체로 축소시킨다. 
+<br/>
+### 3. [JSON.parse(JSON.stringify(dehydrate(queryClient)))](https://github.com/TanStack/query/issues/1458#issuecomment-1022396964)
+next.js에서는 `getServerSideProps`의 결과로 `undefined`를 포함하면 안되는데
+`prefetchInfiniteQuery`에서는 패치할 다음 페이지가 있는지 여부를 `pageParam`의 `undefined`여부로 결정한다.
+`JSON.parse(JSON.stringify())`는 일반적으로 js 객체 deep copy할 때 사용되지만 여기서는 `undefined`를 `null`로 바꾸는 역할을 한다.
+
+<CodeBlock>
+{`
+export async function getServerSideProps({ query }: GetServerSidePropsContext) {
+  const queryClient = new QueryClient();
+  const keyword = query.keyword as string;
+
+  await queryClient.prefetchInfiniteQuery({
+    queryKey: documentKeys.searchDocuments(keyword),
+    queryFn: () => fetchDocuments({ keyword }),
+  });
+
+  return {
+    props: {
+      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+    },
+  };
+}
+`}
+</CodeBlock>
+<br />
+
+### 4. props로 전달 받은 dehydratedState를 클라이언트 queryClient에 주입시킨다.
+<CodeBlock>
+{`
+    <ReactQueryProvider>  
+      <Hydrate state={pageProps.dehydratedState}>
+        <Component {...pageProps} />
+      </Hydrate>
+    </ReactQueryProvider>
+`}
+</CodeBlock>
+<br />
+
+### 5. 클라이언트에 queryKey로 접근하면 데이터를 별도 API요청 없이 바로 사용할 수 있다.
+staleTime을 설정해 주어야 클라이어트에서 별도 요청이 발생하지 않는다.
+<CodeBlock>
+{`
+  const infiniteQueryResult = useInfiniteQuery({
+    queryKey: documentKeys.searchDocuments(keyword),
+    queryFn: ({ pageParam }) => {
+      return fetchDocuments({
+        keyword,
+        from: pageParam?.from,
+      });
+    },
+    getNextPageParam: ({ isLast }, pages) =>
+      isLast ? undefined : { from: pages.length * SIZE },
+    enabled: keyword.trim() !== "",
+    staleTime: 10000,
+  });
+`}
+</CodeBlock>
+<br />
+
+## Reference
+- [Queries](https://tanstack.com/query/v4/docs/react/guides/queries#fetchstatus)
