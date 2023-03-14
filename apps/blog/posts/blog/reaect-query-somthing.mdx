@@ -7,7 +7,7 @@ published: true
 
 ## isLoading vs isFetching
 - isFetching: 실제 네크워크 요청이 이뤄지고 있다면 `true`
-- isLoading: 아무 데이터가 없는 상태에서 데이터를 가져오고 있다면 `true`, 캐시된 데이터가 있을 경우 `false`
+- isLoading: 캐시 포함 기존 데이터가 없다면 `true`, 캐시된 데이터가 있을 경우 `false`
 - useInfiniteQuery로 무한 스크롤을 구현하는 경우 첫 페이지 로더만 보여주려면 `isLoading`, 각 페이지 패치시마다 보여주려면 `isFetching`을 사용
 - [enabled 옵션이 `false`일 경우 isLaoding = `true`?](https://github.com/TanStack/query/issues/3584)  => enabled 옵션인 false인 상태에서 isLoading은 `true`일 수 있다.
 - isLaoding은 데이터의 존재 여부가 기준이 된다. enabled: false라도 데이터가 존재하지 않으면 true이다.
