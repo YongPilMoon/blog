@@ -8,7 +8,8 @@ import Button from '@/features/ui/Button'
 import Image from '@/features/ui/Image'
 import Head from 'next/head'
 import { siteTitle } from '../_document'
-import  CodeBlock from '@/features/ui/CodeBlock';
+import CodeBlock from '@/features/ui/CodeBlock'
+import { GetStaticPropsContext, InferGetStaticPropsType } from 'next'
 
 export async function getStaticPaths() {
   const paths = getAllPostIds()
@@ -18,17 +19,26 @@ export async function getStaticPaths() {
   }
 }
 
-export async function getStaticProps({ params }) {
-  const postData = await getPostData(params.id)
-  return {
-    props: {
-      postData,
-    },
+export async function getStaticProps({
+  params,
+}: GetStaticPropsContext<{ id: string }>) {
+  if (params?.id) {
+    const postData = await getPostData(params.id)
+    return {
+      props: {
+        postData,
+      },
+    }
+  } else {
+    return {}
   }
 }
 
 const components = { Button, CodeBlock, Image }
-export default function Post({ postData }) {
+
+export default function Post({
+  postData,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter()
 
   if (router.isFallback) {

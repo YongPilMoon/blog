@@ -6,7 +6,7 @@ function CodeBlock({ children }) {
     <div className="relative">
       <SyntaxHighlighter
         style={a11yDark}
-        language="javascript"
+        language="typescript"
         customStyle={{ fontSize: '1em' }}
       >
         {children}

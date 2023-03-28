@@ -2,6 +2,8 @@ import { readdirSync, readFileSync } from 'fs'
 
 import matter, { GrayMatterFile } from 'gray-matter'
 import { serialize } from 'next-mdx-remote/serialize'
+import remarkGfm from 'remark-gfm'
+import remarkBreaks from 'remark-breaks'
 
 export type PostCategory = 'blog' | 'algorithm'
 
@@ -11,6 +13,11 @@ export type PostListItem = {
   title: string
   description: string
   published: boolean
+}
+
+interface FrontMatter {
+  title: string
+  date: string
 }
 
 export function getSortedPostList(postCategory: PostCategory) {
@@ -73,13 +80,19 @@ export async function getPostData(id: string) {
   })
 
   const fullPath = `posts/${postCategory}/${id}.mdx`
-  const fileContents = readFileSync(fullPath, 'utf8')
-  const matterResult = matter(fileContents)
-  const mdxSource = await serialize(matterResult.content)
+  const fileContents = readFileSync(fullPath, 'utf8') // 파일 내용을 문자열로 반환
+  const matterResult = matter(fileContents) // front-matter를 파싱
+  const mdxSource = await serialize(matterResult.content, {
+    mdxOptions: {
+      remarkPlugins: [remarkGfm, remarkBreaks],
+    },
+  }) // mdx파일을 javascript로 변환
+
+  const frontmatter = matterResult.data as FrontMatter
 
   return {
     id,
     mdxSource,
-    ...matterResult.data,
+    ...frontmatter,
   }
 }
