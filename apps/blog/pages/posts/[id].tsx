@@ -53,9 +53,7 @@ export default function Post({
       <article className="flex flex-col gap-8">
         <div>
           <h1>{postData.title}</h1>
-          <div>
-            <Date dateString={postData.date} />
-          </div>
+          <div>{postData.date && <Date dateString={postData.date} />}</div>
         </div>
         <div>
           {postData.mdxSource && (
