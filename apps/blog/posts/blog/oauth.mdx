@@ -1,0 +1,62 @@
+---
+title: 'OAuth 프로토콜'
+date: '2022-04-03'
+description: ''
+published: true
+---
+
+## Oauth
+- User
+- MyService
+- Their Service(Google, Facebook, Github)
+<br/>
+User가 MyService를 통해서 Their Service를 이용하하려고 한다. 예를들어 MyService를 통해 구글 켈린더에 일정을 등록하는 경우
+<br/>
+### 가장 간단한 방법
+- MyService는 User로 부터 id와 password를 전달 받아 Their Service에 로그인하여 Their Service를 이용한다.
+- 문제점: 비밀번호 유출 위험이 있고 사용자의 비밀번호를 관리하는데 부담이 된다.
+<br/>
+### accessToken
+- User의 요청으로 Their Service로 부터 accessToken을 발급받는다.
+- id, password 노출이 되지 않는다.
+- accessToken으로 서비스 접근 범위를 제한 할 수 있다.
+<br/>
+### 용어
+- Ther Service => **Resource Server**: accessToken과 같은 자원을 제공하는 서버
+- User => **Resource Owner**: 자원의 원 소유자
+- MyService => **Client**: Resource Owner의 자원을 Resource Server로 부터 제공받아 사용하는 Client
+<br/>
+### Register
+- clientId: Client(My Service)를 식별하는 ID
+- client secret: ID에 대한 비밀번호 -> **외부 유출되면 안됨**
+- Authorized redirects URLs: Authorization code를 전달할 주소
+<br/>
+### Resource Owner의 승인
+- Client가 Resource Owner에게 승인을 위한 링크(http://resource.server/?client_id=1&scope=B,C&redirect_url=https://client/callback) 제공
+- scope는 이용할 서비스 범위를 의미
+- 승인을 위한 링크 클릭시 Resource Server가 승인을 위한 화면(로그인) 제시
+- 로그인 성공 시 등록된 clientId중 client_id와 일치하는 값이 있는지 확인
+- redirect_url이 일치하는지 확인
+- Resource Owner에게 Client가 요청하는 scope 확인 
+<br/>
+### Resource Server의 승인
+- Resource Server는 Resource Owner에게 Authorization code 전송
+- Location 헤더에 https://client/callback?code=3 주소를 Resource Owner에게 전달하여 리다이렉트 시킴
+- Client가 Resource Server에게 접속(https://resource.server/token?grant_type=authorization_code&code=3&redirect_url=https://client/callback&client_id=1&clinet_secret=2)
+- **authorization_code**와 **clinet_secret**을 같이 전송
+- Resource Server에서 clinet로 부터 전달받은 authorization_code와 clinet_secret이 등록된 정보와 일치하는지 확인
+<br/>
+### 엑세스 토큰 발급
+- Resource Server는 accessToken 발행 후 Client에게 전달
+- Clinet는 accessToken을 내부적으로 저장 후 accessToken에 매칭되는 사용자가 Resource Server에 접근 할때 사용
+- Authorization: Bearer `accessToken`를 헤더에 넣어서 사용
+<br/>
+### Refresh Token
+- accessToken은 유효기간이 있다.
+- accessToken을 발급할 때 refresh Token도 발급하는 경우가 있다.
+- accessToken이 유효하지 않으면 refreshToken을 전달하여 accessToken을 다시 발급 받는다.
+
+
+
+
+

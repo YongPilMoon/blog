@@ -1,0 +1,122 @@
+---
+title: 'NextAuth.js'
+date: '2022-04-03'
+description: ''
+published: true
+---
+
+### Next Auth
+next.js를 위한 오픈소스 인증 솔루션
+
+- OAuth 서비스 지원
+- email / passwordless 인증 지원
+- JSON Web Token 지원
+<br/>
+### 설치
+```
+yarn add next-auth
+```
+<br/>
+### API route 추가
+- `pages/api/auth` 폴더에 [...nextauth].ts 동적 라우트 핸들러 파일을 추가합니다.
+- `api/auth/*`로 오는 모든 요청(signIn, callback, signOut)은 자동으로 NextAuth.js에 의해 다루어 집니다. 
+-  NextAuth.js 환경 설정을 내용을 포함하고 있습니다. 
+
+<CodeBlock>
+{`
+  import NextAuth from 'next-auth';
+  import GithubProvider from 'next-auth/provider/github';
+
+  export const authOptions = {
+    providers: [
+      GithubProvider({
+        clientId: process.env.GITHUB_ID,
+        clientSecret: process.env.GITHUB_SECRET
+      })
+    ]
+  }
+
+  export default NextAuth(authOptions);
+`}
+</CodeBlock>
+<br/>
+### Session 상태 공유
+session을 클라이언트에서 사용하기 위해 `SessionProvider`에 서버로 부터 전달 받은 session을 주입해줍니다.
+<CodeBlock>
+{`
+  import { SessionProvider } from 'next-auth/react';
+
+
+  export default function App({
+    Component,
+    pageProps: { session, ...pageProps }
+  }) {
+    return (
+      <SessionProvider session={session}>
+        <Component {...pageProps} />
+      </SessionProvider>
+    )
+  }
+`}
+</CodeBlock>
+<br/>
+### Frontend - useSession
+`useSession()` 훅을 사용하여 로그인 여부 체크
+<CodeBlock>
+{`
+  import { useSession, signIn, signOut } from 'next-auth/react';
+
+  export default function Component() {
+    const { data: session } = useSession();
+    if(session) {
+      return (
+        <>
+          Signed In as {session.user.email} <br/>
+          <button onClick={() => signOut()}> Sign out </button>
+        </>
+      )
+    } else {
+      return (
+        <>
+          Not signed in <br/>
+          <button onClick={() => signIn()}> Sign in </button>
+        </>
+      )
+    }
+  }
+`}
+</CodeBlock>
+<br/>
+### Backend - getServerSession
+`getServerSession` 함수를 사용해서 로그인 여부 체크
+<CodeBlock>
+{`
+  import { getServerSession } from 'next-auth/react';
+  import { authOptions } from './auth/[...nextauth]';
+
+  export default async (req, res) => {
+    const session = getServerSession(req, res, authOptions);
+
+    if (session) {
+      res.send({
+        content:
+          "This is protected content. You can access this content because you are signed in.",
+      })
+    } else {
+      res.send({
+        error: "You must be signed in to view the protected content on this page.",
+      })
+    }
+  }
+`}
+</CodeBlock>
+<br/>
+## OAuth
+1. 어플리케이션은 서비스 리소스에 접근하기 위해 유저에게 인증을 요청합니다.
+2. 유저가 인증하면 어플리케이션은 authorization code를 부여 받습니다.
+3. 어플리케이션은 서비스 서버에 유저로 부터 받은 권한과 서비스 id를 가지고 accessToken을 요청합니다.
+4. authorization code와 서비스 id가 유효하면 서비스 서버는 accessToken을 발급해주고 인증은 완료 됩니다.
+5. 어플리케이션은 서비스 서버 API를 사용하여 리소스를 요청합니다.
+6. accessToken이 유효하면 서비스 서버는 리소스를 제공합니다.
+
+### Howto

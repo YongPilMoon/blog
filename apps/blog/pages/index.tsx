@@ -1,6 +1,5 @@
 import { InferGetServerSidePropsType } from 'next'
 import Head from 'next/head'
-import React from 'react'
 import { siteTitle } from './_document'
 import { getSortedPostList } from '../lib/posts'
 import { PostList } from '@/features/post/PostList'
