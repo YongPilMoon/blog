@@ -1,6 +1,4 @@
-import Darkmode from './Darkmode'
 import Link from 'next/link'
-import NoSSR from './NoSSR'
 import Image from 'next/image'
 import { css } from '@emotion/react'
 
@@ -43,9 +41,6 @@ function Header({ home }) {
               <Menu key={title} title={title} path={path} />
             ))}
           </nav>
-          <NoSSR>
-            <Darkmode />
-          </NoSSR>
         </div>
       </div>
       <div className="flex flex-col items-center mb-6">
