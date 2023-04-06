@@ -4,7 +4,13 @@ import { siteTitle } from './_document'
 import { getSortedPostList } from '../lib/posts'
 import { PostList } from '@/features/post/PostList'
 
-export function getStaticProps() {
+import { PrismaClient } from '@prisma/client'
+
+export async function getStaticProps() {
+  const prisma = new PrismaClient()
+  const posts = await prisma.posts.findMany()
+  console.log(posts)
+
   const blogPostList = getSortedPostList('blog')
   return {
     props: {

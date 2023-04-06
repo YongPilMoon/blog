@@ -29,6 +29,10 @@ Pre-redering을 사용하면 클라이언트 사이드가 아닌 서버에서 �
 라는 2가지 방법으로 Pre-rendering을 제공합니다.
 
 <br />
+## 기본 페이지
+Next.js에서 기본 페이지는 정적페이지로 다룹니다. 때문에 빌드 시점에 페이지를 렌더링 합니다.
+여기서 기본 페이지란 `pages` 폴더에 있는 페이지 중 `getServerSideProps`, `getStaticProps` 같은 함수를 사용하지 않는 페이지를 의미합니다.
+<br/>
 ## SSR(Server Side Rendering)
 
 SSR은 요청 시점에 페이지를 렌더링합니다. 때문에 쇼핑몰 상품 페이지 처럼 요청시 마다 최신 데이터가 보여져야하고 SEO, 초기 로딩 속도가 중요한

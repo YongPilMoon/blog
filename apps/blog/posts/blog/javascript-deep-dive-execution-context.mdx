@@ -15,12 +15,13 @@ published:  true
 - 스택의 최상위에 있는 실행 컨텍스트가 현재 실행되고 있는 코드의 실행 컨텍스트이다.
 <br/>
 ### 렉시컬 환경
-- 식별자와 식별자에 바인딩된 값, 상위 스코프의 참조 값(OuterLexicalEnvironmentReference)을 저장한다.
+- 식별자와 식별자에 바인딩된 값, this 바인딩값, 상위 스코프의 참조 값(OuterLexicalEnvironmentReference)을 저장한다.
 - 식별자와 식별자에 바인딩된 값은 환경레코드(EnvironmentRecord)에 저장된다.
 <br/>
 ### 실행 컨텍스트의 생성과 식별자 검색 과정
 
-```jsx
+<CodeBlock>
+{`
 var x = 1;
 const y = 2;
 
@@ -36,7 +37,9 @@ function foo(a) {
 }
 
 foo(20);
-```
+`}
+</CodeBlock>
+<br/>
 
 1. 전역 객체 생성
 
@@ -112,7 +115,8 @@ foo(20);
 <br/>
 ### 실행 컨텍스트와 블록 레벨 스코프
 
-```jsx
+<CodeBlock>
+{`
 let x = 1;
 
 if(true) {
@@ -121,7 +125,9 @@ if(true) {
 }
 
 console.log(x);
-```
+`}
+</CodeBlock>
+<br/>
 
 - `let` , `const` 키워드로 선언한 변수는 블록 레벨 스코프를 따른다.
 - `let` , `const`가 선언된 코드 블록이 실행되면 블록 레벨 스코프를 생성하기 위해 **선언적 환경 레코드**를 갖는 렉시컬 환경을 생성하여 **기존의 전역 렉시컬 환경과 교체**한다.

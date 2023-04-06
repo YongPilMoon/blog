@@ -8,7 +8,6 @@ async function protectedPageRoute<T>(
   getProps?: () => GetServerSidePropsResult<T>
 ) {
   const session = await getServerSession(context.req, context.res, authOptions)
-  console.log(session)
   if (!session) {
     return {
       redirect: {

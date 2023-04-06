@@ -1,0 +1,53 @@
+---
+title: 'Planet scale Blog Schema'
+date: '2022-04-05'
+description: ''
+published: true
+---
+## MYSQL
+<br/>
+###  테이블 확인
+SHOW TABLES;
+<br/>
+### 테이블 스키마 확인
+DESCRIBE POSTS;
+<br/>
+### 테이블 삭제
+DROP TABLE 테이블이름;
+<br/>
+### 테이블 데이터 확인
+SELECT * FROM posts;
+<br/>
+### 데이터 삽입
+category
+INSERT INTO categories (name) VALUES ('developement');
+post
+INSERT INTO posts (title, content, description, category_id) VALUES ('hello', '안녕', '첫 포스트', '1');
+<br/>
+
+
+## Planet scale
+- 클라우드 MySQL 데이터 베이스
+<br/>
+
+## Schema
+
+<CodeBlock>
+{`
+CREATE TABLE posts (
+  id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  content TEXT NOT NULL,
+  description TEXT,
+  category_id INT,
+  KEY category_id_idx (category_id),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE categories (
+  id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL
+);
+`}
+</CodeBlock>
