@@ -1,31 +1,3 @@
-@tailwind base;
-
-@layer base {
-  h1 {
-    @apply text-3xl;
-    font-weight: 700;
-  }
-  h2 {
-    @apply text-2xl;
-    font-weight: 700;
-    line-height: 2.5rem;
-  }
-  h3 {
-    @apply text-xl;
-    font-weight: 600;
-  }
-  P {
-    @apply text-base;
-    line-height: 1.7rem;
-  }
-  a {
-    @apply text-blue-600 underline;
-  }
-}
-
-@tailwind components;
-@tailwind utilities;
-
 html,
 body {
   padding: 0;
@@ -54,13 +26,7 @@ img {
 }
 
 code {
-  @apply bg-stone-200;
-  @apply rounded-sm;
   padding: 0 2px;
-}
-
-.dark code {
-  @apply bg-stone-600;
 }
 
 li {

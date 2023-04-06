@@ -15,7 +15,7 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": ["react", "tailwindcss", "@typescript-eslint"],
+  "plugins": ["react", "@typescript-eslint"],
   "rules": {
     "react/no-unknown-property": ["error", { "ignore": ["css"] }],
     "react/prop-types": 0,
