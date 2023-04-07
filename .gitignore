@@ -30,3 +30,7 @@ yarn-error.log*
 .env.development
 .env.test.local
 .env.production
+
+node_modules
+# Keep environment variables out of version control
+.env

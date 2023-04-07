@@ -2,7 +2,7 @@ import { PostListItem, PostCategory } from '@/lib/posts'
 import Link from 'next/link'
 import Date from '@/features/ui/Date'
 import { css } from '@emotion/react'
-import { Text } from 'ui'
+import { Text } from '@/features/ui/Text'
 
 type PostListProps = {
   path: PostCategory

@@ -5,7 +5,12 @@ import '@toast-ui/editor/dist/toastui-editor.css'
 interface PostEditorProps {}
 
 const PostEditor: FunctionComponent<PostEditorProps> = () => {
-  return <Editor previewStyle="vertical" height="500px" />
+  const handleOnChange = (e) => {
+    console.log(e)
+  }
+  return (
+    <Editor previewStyle="vertical" height="500px" onChange={handleOnChange} />
+  )
 }
 
 export default PostEditor
